@@ -1,0 +1,32 @@
+---
+interface Props {
+  slug: string;
+  title: string;
+  date: string;
+  tags: string[];
+  excerpt: string;
+}
+
+const { slug, title, date, tags, excerpt } = Astro.props;
+const formattedDate = date ? new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : '';
+---
+
+<a
+  href={`/notes/${slug}`}
+  class="block bg-surface border border-border rounded-[10px] px-6 py-5 no-underline text-fg transition-[border-color,transform,box-shadow] duration-150 hover:border-accent hover:-translate-y-0.5 hover:shadow-[0_4px_20px_rgba(124,106,247,0.15)] hover:no-underline hover:text-fg"
+>
+  <div class="flex items-baseline justify-between gap-4 mb-2">
+    <h2 class="text-[1.05rem] font-semibold text-fg">{title}</h2>
+    {formattedDate && <time class="text-[0.78rem] text-muted whitespace-nowrap shrink-0">{formattedDate}</time>}
+  </div>
+  <p class="text-[0.88rem] text-muted leading-relaxed line-clamp-2 mb-3">{excerpt}</p>
+  {tags.length > 0 && (
+    <div class="flex flex-wrap gap-1.5">
+      {tags.map((tag) => (
+        <span class="inline-block bg-surface2 border border-border text-muted text-xs px-2 py-0.5 rounded-full">
+          #{tag}
+        </span>
+      ))}
+    </div>
+  )}
+</a>
