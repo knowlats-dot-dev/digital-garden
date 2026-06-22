@@ -5,6 +5,7 @@ import { getAllNotes, getNoteBySlug, buildGraphData, wikilinkToHtml } from '../.
 import { unified } from 'unified';
 import remarkParse from 'remark-parse';
 import remarkHtml from 'remark-html';
+import Graph from '../graph.astro';
 
 export async function getStaticPaths() {
   const notes = getAllNotes();
@@ -82,15 +83,43 @@ const outlinkNotes = allNotes.filter((n) => note.outlinks.includes(n.slug));
       )}
     </article>
 
-    <aside class="sticky top-20 bg-surface border border-border rounded-xl overflow-hidden max-lg:order-first">
+    <aside id="graph-aside" class="bg-surface border border-border rounded-xl overflow-hidden lg:sticky lg:top-20 max-lg:fixed max-lg:inset-0 max-lg:rounded-none max-lg:z-[110] max-lg:shadow-2xl max-lg:hidden">
       <div class="flex justify-between items-center px-4 py-3 border-b border-border text-[0.82rem] font-semibold text-muted">
         <span>Knowledge Graph</span>
         <a href="/graph" class="text-[0.78rem] text-accent-light">Full view →</a>
       </div>
-      <div class="h-[400px] max-lg:h-[300px]">
+      <div class="h-100 max-lg:h-[calc(100%-3rem)]">
         <KnowledgeGraph nodes={nodes} edges={edges} activeSlug={slug} client:only="react" />
       </div>
     </aside>
+
+    <button id="graph-toggle" class="fixed bottom-6 right-6 lg:hidden z-120 bg-surface border border-border rounded-full p-2.5 shadow-lg text-muted hover:text-accent-light transition-colors" aria-label="Toggle graph"></button>
+
+    <script>
+      const toggle = document.getElementById('graph-toggle');
+      const aside = document.getElementById('graph-aside');
+
+      const graphIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+        <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+      </svg>`;
+      const closeIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>`;
+
+      function updateIcon(isHidden: boolean) {
+        if (toggle) toggle.innerHTML = isHidden ? graphIcon : closeIcon;
+      }
+
+      updateIcon(true);
+
+      toggle?.addEventListener('click', () => {
+        const isHidden = aside?.classList.contains('max-lg:hidden');
+        aside?.classList.toggle('max-lg:hidden', !isHidden);
+        updateIcon(!isHidden);
+        if (isHidden) window.dispatchEvent(new Event('resize'));
+      });
+    </script>
 
   </div>
 </BaseLayout>

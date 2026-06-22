@@ -1,5 +1,6 @@
 import React, { useCallback, useMemo } from 'react';
-import ReactFlow, {
+import {
+  ReactFlow,
   Background,
   Controls,
   MiniMap,
@@ -10,8 +11,8 @@ import ReactFlow, {
   Handle,
   Position,
   MarkerType,
-} from 'reactflow';
-import 'reactflow/dist/style.css';
+} from '@xyflow/react';
+import '@xyflow/react/dist/style.css';
 
 interface NoteNodeData {
   label: string;

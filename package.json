@@ -17,7 +17,7 @@
     "gray-matter": "^4.0.3",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
-    "reactflow": "^11.11.4",
+    "@xyflow/react": "^12.8.1",
     "remark": "^15.0.1",
     "remark-html": "^16.0.1",
     "remark-parse": "^11.0.0",
