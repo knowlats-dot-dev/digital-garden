@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import Search from '../components/Search';
+import ThemeToggle from '../components/ThemeToggle';
 interface Props {
   title?: string;
 }
@@ -9,6 +10,13 @@ const { title = 'Digital Garden' } = Astro.props;
 
 <html lang="en">
   <head>
+    <script is:inline>
+      (function() {
+        var s = localStorage.getItem('theme');
+        var dark = s === 'dark' || (s === null && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        if (dark) document.documentElement.classList.add('dark');
+      })();
+    </script>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
@@ -24,6 +32,7 @@ const { title = 'Digital Garden' } = Astro.props;
         <Search client:load />
         <a href="/" class="text-muted hover:text-fg transition-colors duration-150 no-underline hover:no-underline">Notes</a>
         <a href="/graph" class="text-muted hover:text-fg transition-colors duration-150 no-underline hover:no-underline">Graph</a>
+        <ThemeToggle client:load />
       </div>
     </nav>
     <main class="max-w-350 mx-auto p-8">
