@@ -70,6 +70,14 @@ a:hover { text-decoration: underline; }
   margin: 1em 0;
 }
 
+/* Search result highlight */
+mark.search-highlight {
+  background: rgba(124, 106, 247, 0.3);
+  color: var(--color-accent-light);
+  border-radius: 2px;
+  padding: 0 2px;
+}
+
 /* Scrollbar */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: var(--color-bg); }

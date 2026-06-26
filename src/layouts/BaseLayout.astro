@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import Search from '../components/Search';
 interface Props {
   title?: string;
 }
@@ -19,7 +20,8 @@ const { title = 'Digital Garden' } = Astro.props;
   <body>
     <nav class="sticky top-0 z-100 flex items-center justify-between px-8 py-3 bg-bg/85 backdrop-blur-md border-b border-border">
       <a href="/" class="font-semibold text-[1.05rem] text-fg no-underline hover:no-underline">🌱 Digital Garden</a>
-      <div class="flex gap-6 text-sm">
+      <div class="flex items-center gap-6 text-sm">
+        <Search client:load />
         <a href="/" class="text-muted hover:text-fg transition-colors duration-150 no-underline hover:no-underline">Notes</a>
         <a href="/graph" class="text-muted hover:text-fg transition-colors duration-150 no-underline hover:no-underline">Graph</a>
       </div>
