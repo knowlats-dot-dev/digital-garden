@@ -3,14 +3,15 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --color-bg: #030712;
-  --color-surface: #111827;
-  --color-surface2: #1f2937;
-  --color-border: #374151;
-  --color-fg: #f9fafb;
-  --color-muted: #9ca3af;
-  --color-accent: #ef4444;
-  --color-accent-light: #f87171;
+  /* dark mode defaults — pure neutral gray (no blue tint) */
+  --color-bg:           var(--color-neutral-950);
+  --color-surface:      var(--color-neutral-900);
+  --color-surface2:     var(--color-neutral-800);
+  --color-border:       var(--color-neutral-700);
+  --color-fg:           var(--color-neutral-50);
+  --color-muted:        var(--color-neutral-400);
+  --color-accent:       var(--color-red-500);
+  --color-accent-light: var(--color-red-400);
   --font-family-sans: 'Inter', system-ui, sans-serif;
   --font-family-mono: 'JetBrains Mono', 'Fira Code', monospace;
 }
@@ -24,18 +25,17 @@ body {
 }
 
 :root:not(.dark) {
-  --color-bg: #f9fafb;
-  --color-surface: #ffffff;
-  --color-surface2: #f3f4f6;
-  --color-border: #e5e7eb;
-  --color-fg: #111827;
-  --color-muted: #6b7280;
-  --color-accent: #dc2626;
-  --color-accent-light: #dc2626;
+  --color-bg:           var(--color-neutral-50);
+  --color-surface:      var(--color-white);
+  --color-surface2:     var(--color-neutral-100);
+  --color-border:       var(--color-neutral-200);
+  --color-fg:           var(--color-neutral-900);
+  --color-muted:        var(--color-neutral-500);
+  --color-accent:       var(--color-red-600);
+  --color-accent-light: var(--color-red-600);
 }
 
 a { color: var(--color-accent-light); text-decoration: none; }
-a:hover { text-decoration: underline; }
 
 /* Wikilinks — dynamic pseudo-classes not expressible as Tailwind utilities */
 .wikilink {
