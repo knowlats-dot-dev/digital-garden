@@ -6,6 +6,7 @@ interface Props {
   title?: string;
 }
 const { title = 'Digital Garden' } = Astro.props;
+const path = Astro.url.pathname;
 ---
 
 <html lang="en">
@@ -30,8 +31,8 @@ const { title = 'Digital Garden' } = Astro.props;
       <a href="/" class="font-semibold text-[1.05rem] text-fg no-underline hover:no-underline">🌱 Digital Garden</a>
       <div class="flex items-center gap-6 text-sm">
         <Search client:load />
-        <a href="/" class="text-muted hover:text-fg transition-colors duration-150 no-underline hover:no-underline">Notes</a>
-        <a href="/graph" class="text-muted hover:text-fg transition-colors duration-150 no-underline hover:no-underline">Graph</a>
+        <a href="/" class={`transition-colors duration-150 no-underline hover:no-underline ${path === '/' || path.startsWith('/notes/') || path.startsWith('/tags/') ? 'text-fg border-b-2 border-accent pb-0.5' : 'text-muted hover:text-fg'}`}>Notes</a>
+        <a href="/graph" class={`transition-colors duration-150 no-underline hover:no-underline ${path === '/graph' ? 'text-fg border-b-2 border-accent pb-0.5' : 'text-muted hover:text-fg'}`}>Graph</a>
         <ThemeToggle client:load />
       </div>
     </nav>
