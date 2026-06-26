@@ -11,6 +11,12 @@ pnpm preview    # Preview production build locally
 pnpm astro check  # Type-check .astro files
 ```
 
+## Browser testing
+
+A Playwright MCP server is configured in `.mcp.json` and enabled via `.claude/settings.json`. Use the `mcp__playwright__*` tools to navigate, screenshot, and interact with the running dev server at `http://localhost:4321` for visual verification of UI changes.
+
+> **Do not download the `chrome-for-testing` browser.** The Playwright MCP is configured to use the already-installed `chromium` channel (`--browser chromium` in `.mcp.json`). If a tool call asks to install `chrome-for-testing`, do not run the install — stay on the existing channel.
+
 ## Architecture
 
 This is an **Astro 6** static site with **React** islands and **Tailwind CSS v4**.
