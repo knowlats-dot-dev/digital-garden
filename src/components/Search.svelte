@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { showControlKey } from '../lib/search';
   import SearchModal from './SearchModal.svelte';
 
   let isOpen: boolean = $state(false);
@@ -13,7 +14,7 @@
     <circle cx="11" cy="11" r="8" />
     <path d="m21 21-4.35-4.35" />
   </svg>
-  <kbd class="hidden sm:inline-block text-[0.7rem] border border-border rounded px-1 py-0.5 leading-none">⌘K</kbd>
+  <kbd class="hidden sm:inline-block text-[0.7rem] border border-border rounded px-1 py-0.5 leading-none">{showControlKey()}K</kbd>
 </button>
 
 <SearchModal bind:isOpen />

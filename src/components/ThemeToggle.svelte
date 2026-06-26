@@ -2,8 +2,10 @@
   type Theme = 'dark' | 'light';
 
   function getInitialTheme(): Theme {
-    if (typeof localStorage === 'undefined') return 'dark';
-    return localStorage.getItem('theme') === 'light' ? 'light' : 'dark';
+    if (typeof window === 'undefined') return 'dark';
+    const stored = window.localStorage.getItem('theme');
+    if (stored === 'light' || stored === 'dark') return stored;
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   }
 
   let theme: Theme = $state(getInitialTheme());

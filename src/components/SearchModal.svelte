@@ -53,6 +53,9 @@
       getSearchIndex()
         .then((idx) => {
           indexRef = idx;
+          if (query.trim()) {
+            results = queryIndex(idx, query);
+          }
           isLoading = false;
         })
         .catch(() => {

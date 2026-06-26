@@ -10,12 +10,6 @@ const lunrAny = lunr as any;
 
 stemmerSupport(lunr);
 
-// lunr.utils.warn uses `this` as the global object, which is undefined in strict ESM.
-// Patch it so pipeline.registerFunction doesn't throw on HMR or strict-mode builds.
-if (lunrAny.utils && !lunrAny.utils.warn) {
-  lunrAny.utils.warn = (msg: string) => console.warn(msg);
-}
-
 lunrAny.wordcut = wordcut;
 multiLang(lunr);
 thLang(lunr);
@@ -78,4 +72,10 @@ export function queryIndex(index: lunr.Index, query: string): SearchResult[] {
     // lunr throws on malformed queries (e.g. trailing ~, bare ^)
     return [];
   }
+}
+
+export function showControlKey() {
+  const isMac = /Mac/.test(navigator.platform);
+
+  return isMac ? "⌘" : "Ctrl + "
 }
