@@ -1,5 +1,6 @@
-import React, { useCallback, useMemo } from 'react';
-import ReactFlow, {
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import {
+  ReactFlow,
   Background,
   Controls,
   MiniMap,
@@ -10,8 +11,8 @@ import ReactFlow, {
   Handle,
   Position,
   MarkerType,
-} from 'reactflow';
-import 'reactflow/dist/style.css';
+} from '@xyflow/react';
+import '@xyflow/react/dist/style.css';
 
 interface NoteNodeData {
   label: string;
@@ -21,14 +22,14 @@ interface NoteNodeData {
 }
 
 function NoteNode({ data }: { data: NoteNodeData }) {
-  const tagColor = data.tags[0] ? tagToColor(data.tags[0]) : '#7c6af7';
+  const tagColor = data.tags[0] ? tagToColor(data.tags[0]) : '#ef4444';
 
   return (
     <div
       className={[
         'rounded-[10px] px-3.5 py-2.5 min-w-30 max-w-45 cursor-pointer transition-all duration-200 border-[1.5px]',
         data.active
-          ? 'bg-[rgba(124,106,247,0.25)] border-accent-light shadow-[0_0_16px_rgba(124,106,247,0.4)]'
+          ? 'bg-[color-mix(in_oklch,var(--color-accent)_20%,transparent)] border-accent-light shadow-[0_0_16px_color-mix(in_oklch,var(--color-accent)_40%,transparent)]'
           : 'bg-surface border-border shadow-none',
       ].join(' ')}
     >
@@ -50,13 +51,13 @@ function tagToColor(tag: string): string {
   const colors: Record<string, string> = {
     productivity: '#4ade80',
     tools: '#fb923c',
-    meta: '#7c6af7',
+    meta: '#ef4444',
     system: '#38bdf8',
     obsidian: '#a78bfa',
     workflow: '#f472b6',
     'note-taking': '#34d399',
   };
-  return colors[tag] ?? '#7c6af7';
+  return colors[tag] ?? '#ef4444';
 }
 
 const nodeTypes: NodeTypes = { noteNode: NoteNode };
@@ -68,6 +69,24 @@ interface Props {
 }
 
 export default function KnowledgeGraph({ nodes: initialNodes, edges: initialEdges, activeSlug }: Props) {
+  const [isDark, setIsDark] = useState(() => document.documentElement.classList.contains('dark'));
+
+  useEffect(() => {
+    const obs = new MutationObserver(() =>
+      setIsDark(document.documentElement.classList.contains('dark'))
+    );
+    obs.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    return () => obs.disconnect();
+  }, []);
+
+  const colors = useMemo(
+    () =>
+      isDark
+        ? { bg: '#030712', surface: '#111827', surface2: '#1f2937', border: '#374151', accent: '#ef4444', accentLight: '#f87171' }
+        : { bg: '#f9fafb', surface: '#ffffff', surface2: '#f3f4f6', border: '#e5e7eb', accent: '#dc2626', accentLight: '#dc2626' },
+    [isDark],
+  );
+
   const rfNodes = useMemo(
     () =>
       initialNodes.map((n) => ({
@@ -82,15 +101,19 @@ export default function KnowledgeGraph({ nodes: initialNodes, edges: initialEdge
     () =>
       initialEdges.map((e) => ({
         ...e,
-        style: { stroke: '#2e3348', strokeWidth: 1.5 },
-        markerEnd: { type: MarkerType.ArrowClosed, color: '#2e3348', width: 12, height: 12 },
+        style: { stroke: colors.border, strokeWidth: 1.5 },
+        markerEnd: { type: MarkerType.ArrowClosed, color: colors.border, width: 12, height: 12 },
         animated: false,
       })),
-    [initialEdges],
+    [initialEdges, colors],
   );
 
   const [nodes, , onNodesChange] = useNodesState(rfNodes);
-  const [edges, , onEdgesChange] = useEdgesState(rfEdges);
+  const [edges, setEdges, onEdgesChange] = useEdgesState(rfEdges);
+
+  useEffect(() => {
+    setEdges(rfEdges);
+  }, [rfEdges, setEdges]);
 
   const onNodeClick = useCallback((_: React.MouseEvent, node: Node) => {
     window.location.href = `/notes/${node.data.slug}`;
@@ -108,17 +131,17 @@ export default function KnowledgeGraph({ nodes: initialNodes, edges: initialEdge
         fitView
         fitViewOptions={{ padding: 0.3 }}
         proOptions={{ hideAttribution: true }}
-        style={{ background: '#0f1117' }}
+        style={{ background: colors.bg }}
       >
-        <Background color="#2e3348" gap={20} size={1} />
+        <Background color={colors.border} gap={20} size={1} />
         <Controls
-          style={{ background: '#1a1d27', border: '1px solid #2e3348', borderRadius: '8px' }}
+          style={{ background: colors.surface, border: `1px solid ${colors.border}`, borderRadius: '8px' }}
           showInteractive={false}
         />
         <MiniMap
-          nodeColor={(n) => (n.data?.active ? '#a997ff' : '#22263a')}
-          maskColor="rgba(15,17,23,0.7)"
-          style={{ background: '#1a1d27', border: '1px solid #2e3348', borderRadius: '8px' }}
+          nodeColor={(n) => (n.data?.active ? colors.accentLight : colors.surface2)}
+          maskColor={isDark ? 'rgba(3,7,18,0.7)' : 'rgba(249,250,251,0.7)'}
+          style={{ background: colors.surface, border: `1px solid ${colors.border}`, borderRadius: '8px' }}
         />
       </ReactFlow>
     </div>
