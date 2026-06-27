@@ -75,7 +75,8 @@ export function queryIndex(index: lunr.Index, query: string): SearchResult[] {
 }
 
 export function showControlKey() {
-  const isMac = /Mac/.test(navigator.platform);
+  if (typeof navigator === 'undefined') return 'Ctrl + ';
 
-  return isMac ? "⌘" : "Ctrl + "
+  const platform = (navigator as any).userAgentData?.platform ?? navigator.platform ?? '';
+  return /mac/i.test(platform) ? '⌘' : 'Ctrl + ';
 }
