@@ -90,10 +90,15 @@
     document.addEventListener('pointerdown', onPointerDown);
     return { destroy() { document.removeEventListener('pointerdown', onPointerDown); } };
   }
+
+  function portal(node: HTMLElement) {
+    document.body.appendChild(node);
+    return { destroy() { if (node.parentNode) node.parentNode.removeChild(node); } };
+  }
 </script>
 
 {#if isOpen}
-  <div class="fixed inset-0 z-200 flex items-start justify-center pt-[15vh] px-4">
+  <div use:portal class="fixed inset-0 z-200 flex items-start justify-center pt-[15vh] px-4">
     <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" aria-hidden="true"></div>
 
     <div
