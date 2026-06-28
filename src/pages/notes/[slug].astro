@@ -5,7 +5,6 @@ import { getAllNotes, getNoteBySlug, buildGraphData, wikilinkToHtml } from '../.
 import { unified } from 'unified'
 import remarkParse from 'remark-parse'
 import remarkHtml from 'remark-html'
-import Graph from '../graph.astro'
 
 export async function getStaticPaths() {
   const notes = getAllNotes()

@@ -26,7 +26,6 @@ This is an **Astro 6** static site with **React** and **Svelte 5** islands and *
 Notes are plain Markdown files in `content/notes/` with YAML frontmatter (`title`, `date`, `tags[]`). They are **not** Astro Content Collections — they are read at build time by `src/lib/notes.ts` using `gray-matter` directly from the filesystem.
 
 `src/lib/notes.ts` is the single source of truth for all note data. It:
-
 - Parses frontmatter and extracts `[[wikilink]]` syntax (supporting `[[slug|alias]]`)
 - Computes bidirectional backlinks across all notes in a single pass
 - Builds React Flow graph data (`buildGraphData`)

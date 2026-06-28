@@ -24,6 +24,17 @@ body {
   min-height: 100vh;
 }
 
+:root:not(.dark) {
+  --color-bg:           var(--color-neutral-50);
+  --color-surface:      var(--color-white);
+  --color-surface2:     var(--color-neutral-100);
+  --color-border:       var(--color-neutral-200);
+  --color-fg:           var(--color-neutral-900);
+  --color-muted:        var(--color-neutral-500);
+  --color-accent:       var(--color-red-600);
+  --color-accent-light: var(--color-red-600);
+}
+
 body,
 nav,
 .note-card,
@@ -53,6 +64,7 @@ a {
 /* Wikilinks — dynamic pseudo-classes not expressible as Tailwind utilities */
 .wikilink {
   color: var(--color-accent-light);
+  background: color-mix(in oklch, var(--color-accent) 15%, transparent);
   background: color-mix(in oklch, var(--color-accent) 15%, transparent);
   padding: 1px 4px;
   border-radius: 4px;
@@ -121,6 +133,14 @@ a {
   padding-left: 1rem;
   color: var(--color-muted);
   margin: 1em 0;
+}
+
+/* Search result highlight */
+mark.search-highlight {
+  background: color-mix(in oklch, var(--color-accent) 30%, transparent);
+  color: var(--color-accent-light);
+  border-radius: 2px;
+  padding: 0 2px;
 }
 
 /* Search result highlight */
