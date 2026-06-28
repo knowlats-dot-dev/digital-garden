@@ -1,4 +1,5 @@
 ---
+import { mac } from 'astro:schema'
 import Search from '../components/Search.svelte'
 import ThemeToggle from '../components/ThemeToggle.svelte'
 
@@ -15,14 +16,18 @@ const NAV_LINKS = [
     title: 'Graph',
     active: path.startsWith('/graph'),
   },
+  {
+    path: 'https://knowlats.dev',
+    title: 'Blog'
+  }
 ]
 ---
 
 <nav
   class="bg-bg/85 border-border sticky top-0 z-100 flex items-center justify-between border-b px-8 py-3 backdrop-blur-md"
 >
-  <a href="/" class="text-fg text-[1.05rem] font-semibold no-underline hover:no-underline"
-    >🌱 Digital Garden</a
+  <a href="/" class="text-fg text-[1.05rem] font-display no-underline hover:no-underline"
+    >🌱 Knowlats Digital Garden</a
   >
   <div class="flex items-center gap-6 text-sm">
     <Search client:load />
@@ -30,7 +35,7 @@ const NAV_LINKS = [
       NAV_LINKS.map((item) => (
         <a
           href={item.path}
-          class={`decoration-2 transition-colors duration-150 hover:underline ${item.active ? 'underline decoration-dashed' : 'no-underline'}`}
+          class={`font-display decoration-2 transition-colors duration-150 hover:underline ${item.active ? 'underline decoration-dashed' : 'no-underline'}`}
         >
           {item.title}
         </a>
