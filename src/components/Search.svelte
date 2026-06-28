@@ -7,7 +7,7 @@
 
 <button
   onclick={() => (isOpen = true)}
-  aria-label="Search notes (Ctrl+K)"
+  aria-label={`Search notes (${showControlKey()}K)`}
   class="flex items-center gap-2 text-muted hover:text-fg transition-colors duration-150 text-sm cursor-pointer"
 >
   <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
