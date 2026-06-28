@@ -33,24 +33,37 @@ export interface SearchResult {
 let _index: lunr.Index | null = null
 let _docs: Map<string, SearchDoc> | null = null
 
+let _index: lunr.Index | null = null
+let _docs: Map<string, SearchDoc> | null = null
+let _indexPromise: Promise<lunr.Index> | null = null
+
 export async function getSearchIndex(): Promise<lunr.Index> {
   if (_index) return _index
+  if (_indexPromise) return _indexPromise
 
-  const resp = await fetch('/search.json')
-  const docs: SearchDoc[] = await resp.json()
-  _docs = new Map(docs.map((d) => [d.slug, d]))
+  _indexPromise = (async () => {
+    const resp = await fetch('/search.json')
+    const docs: SearchDoc[] = await resp.json()
+    _docs = new Map(docs.map((d) => [d.slug, d]))
 
-  _index = lunr(function () {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ;(this as any).use(lunrAny.multiLanguage('en', 'th'))
-    this.field('title', { boost: 5 })
-    this.field('tags', { boost: 3 })
-    this.field('content', { boost: 1 })
-    this.ref('slug')
-    docs.forEach((d) => this.add(d))
-  })
+    _index = lunr(function () {
+      // eslint-disable-next-line `@typescript-eslint/no-explicit-any`
+      ;(this as any).use(lunrAny.multiLanguage('en', 'th'))
+      this.field('title', { boost: 5 })
+      this.field('tags', { boost: 3 })
+      this.field('content', { boost: 1 })
+      this.ref('slug')
+      docs.forEach((d) => this.add(d))
+    })
 
-  return _index
+    return _index
+  })()
+
+  try {
+    return await _indexPromise
+  } finally {
+    _indexPromise = null
+  }
 }
 
 export function queryIndex(index: lunr.Index, query: string): SearchResult[] {
