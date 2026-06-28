@@ -1,16 +1,18 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import KnowledgeGraph from '../components/KnowledgeGraph';
-import { getAllNotes, buildGraphData } from '../lib/notes';
+import BaseLayout from '../layouts/BaseLayout.astro'
+import KnowledgeGraph from '../components/KnowledgeGraph'
+import { getAllNotes, buildGraphData } from '../lib/notes'
 
-const notes = getAllNotes();
-const { nodes, edges } = buildGraphData(notes);
+const notes = getAllNotes()
+const { nodes, edges } = buildGraphData(notes)
 ---
 
 <BaseLayout title="Knowledge Graph">
-  <div class="flex flex-col h-[calc(100vh-80px)]">
+  <div class="graph-title flex h-[calc(100vh-80px)] flex-col">
     <div class="mb-4">
-      <h1 class="text-4xl font-bold bg-linear-to-br from-fg to-accent-light bg-clip-text text-transparent mb-1">
+      <h1
+        class="from-fg to-accent-light mb-1 bg-linear-to-br bg-clip-text text-4xl font-bold text-transparent"
+      >
         Knowledge Graph
       </h1>
       <p class="text-muted text-sm">
@@ -18,7 +20,7 @@ const { nodes, edges } = buildGraphData(notes);
       </p>
     </div>
 
-    <div class="flex-1 border border-border rounded-xl overflow-hidden min-h-[500px]">
+    <div class="border-border min-h-125 flex-1 overflow-hidden rounded-xl border">
       <KnowledgeGraph nodes={nodes} edges={edges} client:only="react" />
     </div>
   </div>

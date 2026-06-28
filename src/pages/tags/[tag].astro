@@ -1,43 +1,51 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import NoteCard from '../../components/NoteCard.astro';
-import { getAllNotes } from '../../lib/notes';
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import NoteCard from '../../components/NoteCard.astro'
+import { getAllNotes } from '../../lib/notes'
 
 export async function getStaticPaths() {
-  const notes = getAllNotes();
-  const tags = [...new Set(notes.flatMap((n) => n.tags))];
+  const notes = getAllNotes()
+  const tags = [...new Set(notes.flatMap((n) => n.tags))]
   return tags.map((tag) => ({
     params: { tag },
     props: { tag, notes: notes.filter((n) => n.tags.includes(tag)) },
-  }));
+  }))
 }
 
-const { tag, notes } = Astro.props;
+const { tag, notes } = Astro.props
 
 function excerpt(content: string): string {
-  const plain = content.replace(/#{1,6}\s+.+/g, '').replace(/\[\[([^\]|]+)(?:\|[^\]]+)?\]\]/g, '$1').replace(/[*_`]/g, '').trim();
-  return plain.slice(0, 160).replace(/\n+/g, ' ') + (plain.length > 160 ? '…' : '');
+  const plain = content
+    .replace(/#{1,6}\s+.+/g, '')
+    .replace(/\[\[([^\]|]+)(?:\|[^\]]+)?\]\]/g, '$1')
+    .replace(/[*_`]/g, '')
+    .trim()
+  return plain.slice(0, 160).replace(/\n+/g, ' ') + (plain.length > 160 ? '…' : '')
 }
 ---
 
 <BaseLayout title={`#${tag}`}>
   <div class="mb-6">
-    <a href="/" class="text-sm text-muted block mb-2 no-underline hover:text-fg hover:no-underline transition-colors">← All notes</a>
-    <h1 class="text-4xl font-bold bg-gradient-to-br from-fg to-accent-light bg-clip-text text-transparent mb-1">
-      #{tag}
-    </h1>
+    <a
+      href="/"
+      class="text-muted hover:text-fg mb-2 block text-sm no-underline transition-colors hover:no-underline"
+      >← All notes</a
+    >
+    <h1 class="text-fg mb-1 text-2xl font-semibold">#{tag}</h1>
     <p class="text-muted text-sm">{notes.length} {notes.length === 1 ? 'note' : 'notes'}</p>
   </div>
 
-  <div class="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-4">
-    {notes.map((note) => (
-      <NoteCard
-        slug={note.slug}
-        title={note.title}
-        date={note.date}
-        tags={note.tags}
-        excerpt={excerpt(note.content)}
-      />
-    ))}
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+    {
+      notes.map((note) => (
+        <NoteCard
+          slug={note.slug}
+          title={note.title}
+          date={note.date}
+          tags={note.tags}
+          excerpt={excerpt(note.content)}
+        />
+      ))
+    }
   </div>
 </BaseLayout>

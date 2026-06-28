@@ -1,15 +1,18 @@
-@import "tailwindcss";
+@import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --color-bg: #0f1117;
-  --color-surface: #1a1d27;
-  --color-surface2: #22263a;
-  --color-border: #2e3348;
-  --color-fg: #e2e8f0;
-  --color-muted: #8892a4;
-  --color-accent: #7c6af7;
-  --color-accent-light: #a997ff;
-  --font-family-sans: 'Inter', system-ui, sans-serif;
+  --color-bg: var(--color-neutral-950);
+  --color-surface: var(--color-neutral-900);
+  --color-surface2: var(--color-neutral-800);
+  --color-border: var(--color-neutral-700);
+  --color-fg: var(--color-neutral-50);
+  --color-muted: var(--color-neutral-400);
+  --color-accent: var(--color-red-500);
+  --color-accent-light: var(--color-red-400);
+  --font-display: var(--font-pixel);
+  --font-family-sans: var(--font-inter)
   --font-family-mono: 'JetBrains Mono', 'Fira Code', monospace;
 }
 
@@ -21,18 +24,55 @@ body {
   min-height: 100vh;
 }
 
-a { color: var(--color-accent-light); text-decoration: none; }
-a:hover { text-decoration: underline; }
+:root:not(.dark) {
+  --color-bg:           var(--color-neutral-50);
+  --color-surface:      var(--color-white);
+  --color-surface2:     var(--color-neutral-100);
+  --color-border:       var(--color-neutral-200);
+  --color-fg:           var(--color-neutral-900);
+  --color-muted:        var(--color-neutral-500);
+  --color-accent:       var(--color-red-600);
+  --color-accent-light: var(--color-red-600);
+}
+
+body,
+nav,
+.note-card,
+.graph-title,
+.graph-container * {
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease,
+    border-color 0.3s ease;
+}
+
+:root:not(.dark) {
+  --color-bg: var(--color-neutral-50);
+  --color-surface: var(--color-white);
+  --color-surface2: var(--color-neutral-100);
+  --color-border: var(--color-neutral-200);
+  --color-fg: var(--color-neutral-900);
+  --color-muted: var(--color-neutral-500);
+  --color-accent: var(--color-red-600);
+  --color-accent-light: var(--color-red-600);
+}
+
+a {
+  color: var(--color-accent-light);
+}
 
 /* Wikilinks — dynamic pseudo-classes not expressible as Tailwind utilities */
 .wikilink {
   color: var(--color-accent-light);
-  background: rgba(124, 106, 247, 0.15);
+  background: color-mix(in oklch, var(--color-accent) 15%, transparent);
+  background: color-mix(in oklch, var(--color-accent) 15%, transparent);
   padding: 1px 4px;
   border-radius: 4px;
   font-size: 0.92em;
 }
-.wikilink:hover { background: rgba(124, 106, 247, 0.3); }
+.wikilink:hover {
+  background: color-mix(in oklch, var(--color-accent) 30%, transparent);
+}
 .wikilink-missing {
   color: var(--color-muted);
   text-decoration: line-through;
@@ -40,13 +80,35 @@ a:hover { text-decoration: underline; }
 }
 
 /* Prose — rendered from markdown, no access to element classes */
-.prose h1, .prose h2, .prose h3 { color: var(--color-fg); margin: 1.5em 0 0.5em; line-height: 1.3; }
-.prose h1 { font-size: 1.8rem; }
-.prose h2 { font-size: 1.35rem; border-bottom: 1px solid var(--color-border); padding-bottom: 0.3em; }
-.prose h3 { font-size: 1.1rem; }
-.prose p { margin: 0.9em 0; }
-.prose ul, .prose ol { padding-left: 1.5em; margin: 0.8em 0; }
-.prose li { margin: 0.3em 0; }
+.prose h1,
+.prose h2,
+.prose h3 {
+  color: var(--color-fg);
+  margin: 1.5em 0 0.5em;
+  line-height: 1.3;
+}
+.prose h1 {
+  font-size: 1.8rem;
+}
+.prose h2 {
+  font-size: 1.35rem;
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 0.3em;
+}
+.prose h3 {
+  font-size: 1.1rem;
+}
+.prose p {
+  margin: 0.9em 0;
+}
+.prose ul,
+.prose ol {
+  padding-left: 1.5em;
+  margin: 0.8em 0;
+}
+.prose li {
+  margin: 0.3em 0;
+}
 .prose code {
   background: var(--color-surface2);
   padding: 1px 6px;
@@ -62,7 +124,10 @@ a:hover { text-decoration: underline; }
   overflow-x: auto;
   margin: 1em 0;
 }
-.prose pre code { background: none; padding: 0; }
+.prose pre code {
+  background: none;
+  padding: 0;
+}
 .prose blockquote {
   border-left: 3px solid var(--color-accent);
   padding-left: 1rem;
@@ -70,8 +135,34 @@ a:hover { text-decoration: underline; }
   margin: 1em 0;
 }
 
+/* Search result highlight */
+mark.search-highlight {
+  background: color-mix(in oklch, var(--color-accent) 30%, transparent);
+  color: var(--color-accent-light);
+  border-radius: 2px;
+  padding: 0 2px;
+}
+
+/* Search result highlight */
+mark.search-highlight {
+  background: color-mix(in oklch, var(--color-accent) 30%, transparent);
+  color: var(--color-accent-light);
+  border-radius: 2px;
+  padding: 0 2px;
+}
+
 /* Scrollbar */
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: var(--color-bg); }
-::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: var(--color-muted); }
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-muted);
+}

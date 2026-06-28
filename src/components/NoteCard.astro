@@ -1,32 +1,40 @@
 ---
 interface Props {
-  slug: string;
-  title: string;
-  date: string;
-  tags: string[];
-  excerpt: string;
+  slug: string
+  title: string
+  date: string
+  tags: string[]
+  excerpt: string
 }
 
-const { slug, title, date, tags, excerpt } = Astro.props;
-const formattedDate = date ? new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : '';
+const { slug, title, date, tags, excerpt } = Astro.props
+const formattedDate = date
+  ? new Date(date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
+  : ''
 ---
 
 <a
   href={`/notes/${slug}`}
-  class="block bg-surface border border-border rounded-[10px] px-6 py-5 no-underline text-fg transition-[border-color,transform,box-shadow] duration-150 hover:border-accent hover:-translate-y-0.5 hover:shadow-[0_4px_20px_rgba(124,106,247,0.15)] hover:no-underline hover:text-fg"
+  class="note-card bg-surface border-border text-fg hover:border-accent hover:text-fg flex flex-col rounded-[10px] border px-5 py-4 no-underline transition-[border-color,transform,box-shadow] duration-150 hover:-translate-y-0.5 hover:no-underline hover:shadow-[0_4px_20px_color-mix(in_oklch,var(--color-accent)_15%,transparent)]"
 >
-  <div class="flex items-baseline justify-between gap-4 mb-2">
-    <h2 class="text-[1.05rem] font-semibold text-fg">{title}</h2>
-    {formattedDate && <time class="text-[0.78rem] text-muted whitespace-nowrap shrink-0">{formattedDate}</time>}
+  <div class="mb-2 flex items-baseline justify-between gap-2">
+    <h2 class="text-accent text-[1rem] leading-snug font-semibold">{title}</h2>
+    {
+      formattedDate && (
+        <time class="text-muted shrink-0 text-[0.72rem] whitespace-nowrap">{formattedDate}</time>
+      )
+    }
   </div>
-  <p class="text-[0.88rem] text-muted leading-relaxed line-clamp-2 mb-3">{excerpt}</p>
-  {tags.length > 0 && (
-    <div class="flex flex-wrap gap-1.5">
-      {tags.map((tag) => (
-        <span class="inline-block bg-surface2 border border-border text-muted text-xs px-2 py-0.5 rounded-full">
-          #{tag}
-        </span>
-      ))}
-    </div>
-  )}
+  <p class="text-muted mb-3 line-clamp-3 flex-1 text-[0.82rem] leading-relaxed">{excerpt}</p>
+  {
+    tags.length > 0 && (
+      <div class="mt-auto flex flex-wrap gap-1.5">
+        {tags.map((tag) => (
+          <span class="bg-surface2 border-border text-muted inline-block rounded-full border px-2 py-0.5 text-[0.68rem]">
+            #{tag}
+          </span>
+        ))}
+      </div>
+    )
+  }
 </a>

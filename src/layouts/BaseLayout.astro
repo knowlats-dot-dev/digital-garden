@@ -1,30 +1,34 @@
 ---
-import '../styles/global.css';
+import { Font } from 'astro:assets'
+import Navbar from '../components/Navbar.astro'
+import '../styles/global.css'
+
 interface Props {
-  title?: string;
+  title?: string
 }
-const { title = 'Digital Garden' } = Astro.props;
+const { title = 'Digital Garden' } = Astro.props
 ---
 
 <html lang="en">
   <head>
+    <script is:inline>
+      ;(function () {
+        var s = localStorage.getItem('theme')
+        var dark =
+          s === 'dark' || (s === null && window.matchMedia('(prefers-color-scheme: dark)').matches)
+        if (dark) document.documentElement.classList.add('dark')
+      })()
+    </script>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <title>{title} — Digital Garden</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+    <title>{title} — Knowlats Digital Garden</title>
+    <Font cssVariable='--font-inter' preload />
+    <Font cssVariable='--font-pixel' preload />
   </head>
   <body>
-    <nav class="sticky top-0 z-100 flex items-center justify-between px-8 py-3 bg-bg/85 backdrop-blur-md border-b border-border">
-      <a href="/" class="font-semibold text-[1.05rem] text-fg no-underline hover:no-underline">🌱 Digital Garden</a>
-      <div class="flex gap-6 text-sm">
-        <a href="/" class="text-muted hover:text-fg transition-colors duration-150 no-underline hover:no-underline">Notes</a>
-        <a href="/graph" class="text-muted hover:text-fg transition-colors duration-150 no-underline hover:no-underline">Graph</a>
-      </div>
-    </nav>
-    <main class="max-w-350 mx-auto p-8">
+    <Navbar />
+    <main class="mx-auto max-w-350 p-8">
       <slot />
     </main>
   </body>

@@ -1,96 +1,160 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import KnowledgeGraph from '../../components/KnowledgeGraph';
-import { getAllNotes, getNoteBySlug, buildGraphData, wikilinkToHtml } from '../../lib/notes';
-import { unified } from 'unified';
-import remarkParse from 'remark-parse';
-import remarkHtml from 'remark-html';
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import KnowledgeGraph from '../../components/KnowledgeGraph'
+import { getAllNotes, getNoteBySlug, buildGraphData, wikilinkToHtml } from '../../lib/notes'
+import { unified } from 'unified'
+import remarkParse from 'remark-parse'
+import remarkHtml from 'remark-html'
 
 export async function getStaticPaths() {
-  const notes = getAllNotes();
-  return notes.map((note) => ({ params: { slug: note.slug } }));
+  const notes = getAllNotes()
+  return notes.map((note) => ({ params: { slug: note.slug } }))
 }
 
-const { slug } = Astro.params;
-const note = getNoteBySlug(slug!);
-if (!note) return Astro.redirect('/');
+const { slug } = Astro.params
+const note = getNoteBySlug(slug!)
+if (!note) return Astro.redirect('/')
 
-const allNotes = getAllNotes();
-const validSlugs = new Set(allNotes.map((n) => n.slug));
-const { nodes, edges } = buildGraphData(allNotes);
+const allNotes = getAllNotes()
+const validSlugs = new Set(allNotes.map((n) => n.slug))
+const { nodes, edges } = buildGraphData(allNotes)
 
-const contentWithLinks = wikilinkToHtml(note.content, validSlugs);
-const result = await unified().use(remarkParse).use(remarkHtml, { sanitize: false }).process(contentWithLinks);
-const html = String(result);
+const contentWithLinks = wikilinkToHtml(note.content, validSlugs)
+const result = await unified()
+  .use(remarkParse)
+  .use(remarkHtml, { sanitize: false })
+  .process(contentWithLinks)
+const html = String(result)
 
 const formattedDate = note.date
-  ? new Date(note.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
-  : '';
+  ? new Date(note.date).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    })
+  : ''
 
-const backlinkedNotes = allNotes.filter((n) => note.backlinks.includes(n.slug));
-const outlinkNotes = allNotes.filter((n) => note.outlinks.includes(n.slug));
+const backlinkedNotes = allNotes.filter((n) => note.backlinks.includes(n.slug))
+const outlinkNotes = allNotes.filter((n) => note.outlinks.includes(n.slug))
 ---
 
 <BaseLayout title={note.title}>
-  <div class="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-8 items-start">
-
+  <div class="grid grid-cols-1 items-start gap-8 lg:grid-cols-[1fr_380px]">
     <article class="min-w-0">
-      <header class="mb-8 pb-6 border-b border-border">
-        {formattedDate && <div class="text-xs text-muted mb-2">{formattedDate}</div>}
-        <h1 class="text-4xl font-bold leading-tight mb-3 bg-gradient-to-br from-fg to-accent-light bg-clip-text text-transparent">
+      <header class="border-border mb-8 border-b pb-6">
+        {formattedDate && <div class="text-muted mb-2 text-xs">{formattedDate}</div>}
+        <h1
+          class="from-fg to-accent-light mb-3 bg-linear-to-br bg-clip-text text-4xl leading-tight font-bold text-transparent"
+        >
           {note.title}
         </h1>
-        {note.tags.length > 0 && (
-          <div class="flex flex-wrap gap-1.5">
-            {note.tags.map((tag) => (
-              <a
-                href={`/tags/${tag}`}
-                class="inline-block bg-surface2 border border-border text-muted text-xs px-2 py-0.5 rounded-full no-underline transition-all duration-150 hover:border-accent hover:text-accent-light hover:no-underline"
-              >
-                #{tag}
-              </a>
-            ))}
-          </div>
-        )}
+        {
+          note.tags.length > 0 && (
+            <div class="flex flex-wrap gap-1.5">
+              {note.tags.map((tag) => (
+                <a
+                  href={`/tags/${tag}`}
+                  class="bg-surface2 border-border text-muted hover:border-accent hover:text-accent-light inline-block rounded-full border px-2 py-0.5 text-xs no-underline transition-all duration-150 hover:no-underline"
+                >
+                  #{tag}
+                </a>
+              ))}
+            </div>
+          )
+        }
       </header>
 
       <div class="prose" set:html={html} />
 
-      {(backlinkedNotes.length > 0 || outlinkNotes.length > 0) && (
-        <footer class="mt-12 pt-6 border-t border-border flex flex-wrap gap-8">
-          {outlinkNotes.length > 0 && (
-            <section>
-              <h3 class="text-[0.8rem] font-semibold uppercase tracking-[0.08em] text-muted mb-2">Links to</h3>
-              <ul class="list-none p-0 flex flex-col gap-1">
-                {outlinkNotes.map((n) => (
-                  <li><a href={`/notes/${n.slug}`} class="text-sm text-accent-light">{n.title}</a></li>
-                ))}
-              </ul>
-            </section>
-          )}
-          {backlinkedNotes.length > 0 && (
-            <section>
-              <h3 class="text-[0.8rem] font-semibold uppercase tracking-[0.08em] text-muted mb-2">Linked from</h3>
-              <ul class="list-none p-0 flex flex-col gap-1">
-                {backlinkedNotes.map((n) => (
-                  <li><a href={`/notes/${n.slug}`} class="text-sm text-accent-light">{n.title}</a></li>
-                ))}
-              </ul>
-            </section>
-          )}
-        </footer>
-      )}
+      {
+        (backlinkedNotes.length > 0 || outlinkNotes.length > 0) && (
+          <footer class="border-border mt-12 flex flex-wrap gap-8 border-t pt-6">
+            {outlinkNotes.length > 0 && (
+              <section>
+                <h3 class="text-muted mb-2 text-[0.8rem] font-semibold tracking-[0.08em] uppercase">
+                  Links to
+                </h3>
+                <ul class="flex list-none flex-col gap-1 p-0">
+                  {outlinkNotes.map((n) => (
+                    <li>
+                      <a href={`/notes/${n.slug}`} class="text-accent-light text-sm">
+                        {n.title}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
+            {backlinkedNotes.length > 0 && (
+              <section>
+                <h3 class="text-muted mb-2 text-[0.8rem] font-semibold tracking-[0.08em] uppercase">
+                  Linked from
+                </h3>
+                <ul class="flex list-none flex-col gap-1 p-0">
+                  {backlinkedNotes.map((n) => (
+                    <li>
+                      <a href={`/notes/${n.slug}`} class="text-accent-light text-sm">
+                        {n.title}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
+          </footer>
+        )
+      }
     </article>
 
-    <aside class="sticky top-20 bg-surface border border-border rounded-xl overflow-hidden max-lg:order-first">
-      <div class="flex justify-between items-center px-4 py-3 border-b border-border text-[0.82rem] font-semibold text-muted">
+    <aside
+      id="graph-aside"
+      class="bg-surface border-border overflow-hidden rounded-xl border max-lg:fixed max-lg:inset-0 max-lg:z-[110] max-lg:hidden max-lg:rounded-none max-lg:shadow-2xl lg:sticky lg:top-20"
+    >
+      <div
+        class="border-border text-muted flex items-center justify-between border-b px-4 py-3 text-[0.82rem] font-semibold"
+      >
         <span>Knowledge Graph</span>
-        <a href="/graph" class="text-[0.78rem] text-accent-light">Full view →</a>
+        <a href="/graph" class="text-accent-light text-[0.78rem]">Full view →</a>
       </div>
-      <div class="h-[400px] max-lg:h-[300px]">
+      <div class="h-100 max-lg:h-[calc(100%-3rem)]">
         <KnowledgeGraph nodes={nodes} edges={edges} activeSlug={slug} client:only="react" />
       </div>
     </aside>
 
+    <button
+      id="graph-toggle"
+      class="bg-surface border-border text-muted hover:text-accent-light fixed right-6 bottom-6 z-120 rounded-full border p-2.5 shadow-lg transition-colors lg:hidden"
+      aria-label="Toggle graph"
+      aria-controls="graph-aside"
+      aria-expanded="false"></button>
+
+    <script>
+      const toggle = document.getElementById('graph-toggle')
+      const aside = document.getElementById('graph-aside')
+
+      const graphIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+        <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+      </svg>`
+      const closeIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>`
+
+      function updateIcon(isHidden: boolean) {
+        if (toggle) {
+          toggle.innerHTML = isHidden ? graphIcon : closeIcon
+          toggle.setAttribute('aria-expanded', String(!isHidden))
+        }
+      }
+
+      updateIcon(true)
+
+      toggle?.addEventListener('click', () => {
+        const isHidden = aside?.classList.contains('max-lg:hidden')
+        aside?.classList.toggle('max-lg:hidden', !isHidden)
+        updateIcon(!isHidden)
+        if (isHidden) window.dispatchEvent(new Event('resize'))
+      })
+    </script>
   </div>
 </BaseLayout>

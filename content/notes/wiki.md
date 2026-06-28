@@ -6,7 +6,7 @@ tags: [meta]
 
 # Wiki
 
-A wiki is a collaboratively edited collection of hyperlinked documents. The term comes from the Hawaiian word *wiki* meaning "quick."
+A wiki is a collaboratively edited collection of hyperlinked documents. The term comes from the Hawaiian word _wiki_ meaning "quick."
 
 ## Key Characteristics
 
