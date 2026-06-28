@@ -1,22 +1,22 @@
 ---
-import '../styles/global.css';
-import Search from '../components/Search.svelte';
-import ThemeToggle from '../components/ThemeToggle.svelte';
+import Navbar from '../components/Navbar.astro'
+import '../styles/global.css'
+
 interface Props {
-  title?: string;
+  title?: string
 }
-const { title = 'Digital Garden' } = Astro.props;
-const path = Astro.url.pathname;
+const { title = 'Digital Garden' } = Astro.props
 ---
 
 <html lang="en">
   <head>
     <script is:inline>
-      (function() {
-        var s = localStorage.getItem('theme');
-        var dark = s === 'dark' || (s === null && window.matchMedia('(prefers-color-scheme: dark)').matches);
-        if (dark) document.documentElement.classList.add('dark');
-      })();
+      ;(function () {
+        var s = localStorage.getItem('theme')
+        var dark =
+          s === 'dark' || (s === null && window.matchMedia('(prefers-color-scheme: dark)').matches)
+        if (dark) document.documentElement.classList.add('dark')
+      })()
     </script>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -24,19 +24,14 @@ const path = Astro.url.pathname;
     <title>{title} — Digital Garden</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
-    <nav class="sticky top-0 z-100 flex items-center justify-between px-8 py-3 bg-bg/85 backdrop-blur-md border-b border-border">
-      <a href="/" class="font-semibold text-[1.05rem] text-fg no-underline hover:no-underline">🌱 Digital Garden</a>
-      <div class="flex items-center gap-6 text-sm">
-        <Search client:load />
-        <a href="/" class={`transition-colors duration-150 no-underline hover:no-underline ${path === '/' || path.startsWith('/notes/') || path.startsWith('/tags/') ? 'text-fg border-b-2 border-accent pb-0.5' : 'text-muted hover:text-fg'}`}>Notes</a>
-        <a href="/graph" class={`transition-colors duration-150 no-underline hover:no-underline ${path === '/graph' ? 'text-fg border-b-2 border-accent pb-0.5' : 'text-muted hover:text-fg'}`}>Graph</a>
-        <ThemeToggle client:load />
-      </div>
-    </nav>
-    <main class="max-w-350 mx-auto p-8">
+    <Navbar />
+    <main class="mx-auto max-w-350 p-8">
       <slot />
     </main>
   </body>

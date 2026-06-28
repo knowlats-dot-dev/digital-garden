@@ -1,46 +1,54 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import NoteCard from '../components/NoteCard.astro';
-import { getAllNotes } from '../lib/notes';
+import BaseLayout from '../layouts/BaseLayout.astro'
+import NoteCard from '../components/NoteCard.astro'
+import { getAllNotes } from '../lib/notes'
 
-const notes = getAllNotes().sort((a, b) => (b.date > a.date ? 1 : -1));
+const notes = getAllNotes().sort((a, b) => (b.date > a.date ? 1 : -1))
 
 function excerpt(content: string): string {
-  const plain = content.replace(/#{1,6}\s+.+/g, '').replace(/\[\[([^\]|]+)(?:\|[^\]]+)?\]\]/g, '$1').replace(/[*_`]/g, '').trim();
-  return plain.slice(0, 160).replace(/\n+/g, ' ') + (plain.length > 160 ? '…' : '');
+  const plain = content
+    .replace(/#{1,6}\s+.+/g, '')
+    .replace(/\[\[([^\]|]+)(?:\|[^\]]+)?\]\]/g, '$1')
+    .replace(/[*_`]/g, '')
+    .trim()
+  return plain.slice(0, 160).replace(/\n+/g, ' ') + (plain.length > 160 ? '…' : '')
 }
 
-const allTags = [...new Set(notes.flatMap((n) => n.tags))].sort();
+const allTags = [...new Set(notes.flatMap((n) => n.tags))].sort()
 ---
 
 <BaseLayout title="Notes">
   <div class="mb-6">
-    <h1 class="text-2xl font-semibold text-fg mb-1">All Notes</h1>
+    <h1 class="text-fg mb-1 text-2xl font-semibold">All Notes</h1>
     <p class="text-muted text-sm">{notes.length} notes · a living, growing knowledge base</p>
   </div>
 
-  {allTags.length > 0 && (
-    <div class="flex flex-wrap gap-2 mb-8">
-      {allTags.map((tag) => (
-        <a
-          href={`/tags/${tag}`}
-          class="inline-block bg-surface2 border border-border text-muted text-xs px-2 py-0.5 rounded-full no-underline transition-all duration-150 hover:border-accent hover:text-accent-light hover:no-underline"
-        >
-          #{tag}
-        </a>
-      ))}
-    </div>
-  )}
+  {
+    allTags.length > 0 && (
+      <div class="mb-8 flex flex-wrap gap-2">
+        {allTags.map((tag) => (
+          <a
+            href={`/tags/${tag}`}
+            class="bg-surface2 border-border text-muted hover:border-accent hover:text-accent-light inline-block rounded-full border px-2 py-0.5 text-xs no-underline transition-all duration-150 hover:no-underline"
+          >
+            #{tag}
+          </a>
+        ))}
+      </div>
+    )
+  }
 
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-    {notes.map((note) => (
-      <NoteCard
-        slug={note.slug}
-        title={note.title}
-        date={note.date}
-        tags={note.tags}
-        excerpt={excerpt(note.content)}
-      />
-    ))}
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+    {
+      notes.map((note) => (
+        <NoteCard
+          slug={note.slug}
+          title={note.title}
+          date={note.date}
+          tags={note.tags}
+          excerpt={excerpt(note.content)}
+        />
+      ))
+    }
   </div>
 </BaseLayout>
