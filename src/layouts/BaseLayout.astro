@@ -1,4 +1,5 @@
 ---
+import { Font } from 'astro:assets'
 import Navbar from '../components/Navbar.astro'
 import '../styles/global.css'
 
@@ -21,13 +22,9 @@ const { title = 'Digital Garden' } = Astro.props
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <title>{title} — Digital Garden</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
-      rel="stylesheet"
-    />
+    <title>{title} — Knowlats Digital Garden</title>
+    <Font cssVariable='--font-inter' preload />
+    <Font cssVariable='--font-pixel' preload />
   </head>
   <body>
     <Navbar />
