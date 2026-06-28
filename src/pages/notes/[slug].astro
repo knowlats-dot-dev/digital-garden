@@ -124,7 +124,9 @@ const outlinkNotes = allNotes.filter((n) => note.outlinks.includes(n.slug))
     <button
       id="graph-toggle"
       class="bg-surface border-border text-muted hover:text-accent-light fixed right-6 bottom-6 z-120 rounded-full border p-2.5 shadow-lg transition-colors lg:hidden"
-      aria-label="Toggle graph"></button>
+      aria-label="Toggle graph"
+      aria-controls="graph-aside"
+      aria-expanded="false"></button>
 
     <script>
       const toggle = document.getElementById('graph-toggle')
@@ -139,7 +141,10 @@ const outlinkNotes = allNotes.filter((n) => note.outlinks.includes(n.slug))
       </svg>`
 
       function updateIcon(isHidden: boolean) {
-        if (toggle) toggle.innerHTML = isHidden ? graphIcon : closeIcon
+        if (toggle) {
+          toggle.innerHTML = isHidden ? graphIcon : closeIcon
+          toggle.setAttribute('aria-expanded', String(!isHidden))
+        }
       }
 
       updateIcon(true)
