@@ -1,22 +1,22 @@
 ---
-import Navbar from '../components/Navbar.astro';
-import '../styles/global.css';
+import Navbar from '../components/Navbar.astro'
+import '../styles/global.css'
 
 interface Props {
-  title?: string;
+  title?: string
 }
-const { title = 'Digital Garden' } = Astro.props;
-
+const { title = 'Digital Garden' } = Astro.props
 ---
 
 <html lang="en">
   <head>
     <script is:inline>
-      (function() {
-        var s = localStorage.getItem('theme');
-        var dark = s === 'dark' || (s === null && window.matchMedia('(prefers-color-scheme: dark)').matches);
-        if (dark) document.documentElement.classList.add('dark');
-      })();
+      ;(function () {
+        var s = localStorage.getItem('theme')
+        var dark =
+          s === 'dark' || (s === null && window.matchMedia('(prefers-color-scheme: dark)').matches)
+        if (dark) document.documentElement.classList.add('dark')
+      })()
     </script>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -24,11 +24,14 @@ const { title = 'Digital Garden' } = Astro.props;
     <title>{title} — Digital Garden</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
     <Navbar />
-    <main class="max-w-350 mx-auto p-8">
+    <main class="mx-auto max-w-350 p-8">
       <slot />
     </main>
   </body>

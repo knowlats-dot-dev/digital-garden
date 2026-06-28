@@ -26,6 +26,7 @@ This is an **Astro 6** static site with **React** and **Svelte 5** islands and *
 Notes are plain Markdown files in `content/notes/` with YAML frontmatter (`title`, `date`, `tags[]`). They are **not** Astro Content Collections — they are read at build time by `src/lib/notes.ts` using `gray-matter` directly from the filesystem.
 
 `src/lib/notes.ts` is the single source of truth for all note data. It:
+
 - Parses frontmatter and extracts `[[wikilink]]` syntax (supporting `[[slug|alias]]`)
 - Computes bidirectional backlinks across all notes in a single pass
 - Builds React Flow graph data (`buildGraphData`)
@@ -35,13 +36,13 @@ Slugs are derived from filenames (no `.md`). The `slugify` function lowercases a
 
 ### Pages & routing
 
-| Route | File | Notes |
-|---|---|---|
-| `/` | `src/pages/index.astro` | Lists all notes sorted by date, tag filter bar |
+| Route           | File                           | Notes                                                    |
+| --------------- | ------------------------------ | -------------------------------------------------------- |
+| `/`             | `src/pages/index.astro`        | Lists all notes sorted by date, tag filter bar           |
 | `/notes/[slug]` | `src/pages/notes/[slug].astro` | Individual note with rendered markdown, backlinks, graph |
-| `/tags/[tag]` | `src/pages/tags/[tag].astro` | Notes filtered by tag |
-| `/graph` | `src/pages/graph.astro` | Full-screen knowledge graph |
-| `/search.json` | `src/pages/search.json.ts` | Build-time JSON corpus for client-side search |
+| `/tags/[tag]`   | `src/pages/tags/[tag].astro`   | Notes filtered by tag                                    |
+| `/graph`        | `src/pages/graph.astro`        | Full-screen knowledge graph                              |
+| `/search.json`  | `src/pages/search.json.ts`     | Build-time JSON corpus for client-side search            |
 
 ### Styling
 
