@@ -63,7 +63,7 @@ export function queryIndex(index: lunr.Index, query: string): SearchResult[] {
       return {
         slug: doc.slug,
         title: doc.title,
-        tags: doc.tags ? doc.tags.split(' ').filter(Boolean) : [],
+        tags: doc.tags,
         excerpt: doc.excerpt,
         score: r.score,
       };

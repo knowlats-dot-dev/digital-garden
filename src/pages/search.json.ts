@@ -7,7 +7,7 @@ wordcut.init();
 export interface SearchDoc {
   slug: string;
   title: string;
-  tags: string;
+  tags: string[];
   content: string;
   excerpt: string;
 }
@@ -33,7 +33,7 @@ export const GET: APIRoute = () => {
     return {
       slug: note.slug,
       title: note.title,
-      tags: note.tags.join(' '),
+      tags: note.tags,
       content: segmentThai(plain).slice(0, 5000),
       excerpt: plain.slice(0, 200),
     };

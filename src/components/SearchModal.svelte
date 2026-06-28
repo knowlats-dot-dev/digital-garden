@@ -31,7 +31,7 @@
   let results: SearchResult[] = $state([]);
   let isLoading: boolean = $state(false);
   let indexRef: lunr.Index | null = null;
-  let inputEl: HTMLInputElement | undefined;
+  let inputEl: HTMLInputElement | undefined = $state();
   let debounceTimer: ReturnType<typeof setTimeout> | null = null;
 
   onMount(() => {
