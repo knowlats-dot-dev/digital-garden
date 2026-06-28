@@ -32,9 +32,6 @@ export interface SearchResult {
 
 let _index: lunr.Index | null = null
 let _docs: Map<string, SearchDoc> | null = null
-
-let _index: lunr.Index | null = null
-let _docs: Map<string, SearchDoc> | null = null
 let _indexPromise: Promise<lunr.Index> | null = null
 
 export async function getSearchIndex(): Promise<lunr.Index> {
