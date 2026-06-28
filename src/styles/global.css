@@ -35,7 +35,7 @@ body {
   --color-accent-light: var(--color-red-600);
 }
 
-a { color: var(--color-accent-light); text-decoration: none; }
+a { color: var(--color-accent-light); }
 
 /* Wikilinks — dynamic pseudo-classes not expressible as Tailwind utilities */
 .wikilink {

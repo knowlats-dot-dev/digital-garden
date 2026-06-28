@@ -1,0 +1,30 @@
+---
+import Search from '../components/Search.svelte';
+import ThemeToggle from '../components/ThemeToggle.svelte';
+
+const path = Astro.url.pathname;
+
+const NAV_LINKS = [
+    {
+        path: '/',
+        title: 'Notes',
+        active: path === '/' || path.startsWith('/notes/') || path.startsWith('/tags/'),
+    },
+    {
+        path: '/graph',
+        title: 'Graph',
+        active: path.startsWith('/graph')
+    },
+]
+---
+
+<nav class="sticky top-0 z-100 flex items-center justify-between px-8 py-3 bg-bg/85 backdrop-blur-md border-b border-border">
+    <a href="/" class="font-semibold text-[1.05rem] text-fg no-underline hover:no-underline">🌱 Digital Garden</a>
+    <div class="flex items-center gap-6 text-sm">
+        <Search client:load />
+        {NAV_LINKS.map((item) => (
+            <a href={item.path} class={`transition-colors duration-150 hover:underline decoration-2 ${item.active ? 'underline decoration-dashed' : 'no-underline'}`}>{item.title}</a>
+        ))}
+        <ThemeToggle client:load />
+    </div>
+</nav>

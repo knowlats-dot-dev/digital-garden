@@ -1,12 +1,12 @@
 ---
+import Navbar from '../components/Navbar.astro';
 import '../styles/global.css';
-import Search from '../components/Search.svelte';
-import ThemeToggle from '../components/ThemeToggle.svelte';
+
 interface Props {
   title?: string;
 }
 const { title = 'Digital Garden' } = Astro.props;
-const path = Astro.url.pathname;
+
 ---
 
 <html lang="en">
@@ -27,15 +27,7 @@ const path = Astro.url.pathname;
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
   </head>
   <body>
-    <nav class="sticky top-0 z-100 flex items-center justify-between px-8 py-3 bg-bg/85 backdrop-blur-md border-b border-border">
-      <a href="/" class="font-semibold text-[1.05rem] text-fg no-underline hover:no-underline">🌱 Digital Garden</a>
-      <div class="flex items-center gap-6 text-sm">
-        <Search client:load />
-        <a href="/" class={`transition-colors duration-150 no-underline hover:no-underline ${path === '/' || path.startsWith('/notes/') || path.startsWith('/tags/') ? 'text-fg border-b-2 border-accent pb-0.5' : 'text-muted hover:text-fg'}`}>Notes</a>
-        <a href="/graph" class={`transition-colors duration-150 no-underline hover:no-underline ${path === '/graph' ? 'text-fg border-b-2 border-accent pb-0.5' : 'text-muted hover:text-fg'}`}>Graph</a>
-        <ThemeToggle client:load />
-      </div>
-    </nav>
+    <Navbar />
     <main class="max-w-350 mx-auto p-8">
       <slot />
     </main>
