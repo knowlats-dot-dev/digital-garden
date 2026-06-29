@@ -25,7 +25,7 @@ export interface GraphEdge {
   target: string
 }
 
-const NOTES_DIR = path.join(process.cwd(), 'content/notes')
+const NOTES_DIR = path.join(process.cwd(), 'content')
 
 // Extract [[wikilinks]] from content, supporting both [[slug]] and [[slug|alias]]
 function extractWikilinks(content: string): string[] {
