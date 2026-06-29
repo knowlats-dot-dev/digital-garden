@@ -27,6 +27,26 @@ export interface GraphEdge {
 
 const NOTES_DIR = path.join(process.cwd(), 'content')
 
+function collectMarkdownFiles(dir: string): string[] {
+  const entries = fs.readdirSync(dir, { withFileTypes: true })
+  const files: string[] = []
+
+  for (const entry of entries) {
+    if (entry.name.startsWith('.')) continue
+    const fullPath = path.join(dir, entry.name)
+    if (entry.isDirectory()) {
+      if (entry.name === 'templates') continue
+      files.push(...collectMarkdownFiles(fullPath))
+      continue
+    }
+    if (entry.isFile() && /\.(md|mdx)$/i.test(entry.name)) {
+      files.push(fullPath)
+    }
+  }
+
+  return files
+}
+
 // Extract [[wikilinks]] from content, supporting both [[slug]] and [[slug|alias]]
 function extractWikilinks(content: string): string[] {
   const matches = content.matchAll(/\[\[([^\]|]+)(?:\|[^\]]+)?\]\]/g)
@@ -43,18 +63,19 @@ function slugify(title: string): string {
 
 export function getAllNotes(): Note[] {
   if (!fs.existsSync(NOTES_DIR)) return []
+  const files = collectMarkdownFiles(NOTES_DIR)
 
-  const files = fs.readdirSync(NOTES_DIR).filter((f) => f.endsWith('.md'))
-
-  const notes: Note[] = files.map((file) => {
-    const slug = file.replace(/\.md$/, '')
-    const raw = fs.readFileSync(path.join(NOTES_DIR, file), 'utf-8')
+  const notes: Note[] = files.map((filePath) => {
+    const relativePath = path.relative(NOTES_DIR, filePath)
+    const slugSource = relativePath.replace(/\.(md|mdx)$/i, '').split(path.sep).join(' ')
+    const slug = slugify(slugSource)
+    const raw = fs.readFileSync(filePath, 'utf-8')
     const { data, content } = matter(raw)
 
     return {
       slug,
       title: data.title ?? slug,
-      date: data.date ? String(data.date) : '',
+      date: data.date ? String(data.date) : data.updated ? String(data.updated) : '',
       tags: Array.isArray(data.tags) ? data.tags : [],
       content,
       rawContent: raw,
