@@ -26,6 +26,7 @@ export interface GraphEdge {
 }
 
 const NOTES_DIR = path.join(process.cwd(), 'content')
+const PINNED_NOTE_SLUGS = ['index', 'welcome']
 
 function collectMarkdownFiles(dir: string): string[] {
   const entries = fs.readdirSync(dir, { withFileTypes: true })
@@ -59,6 +60,31 @@ function slugify(title: string): string {
     .replace(/[^\p{L}\p{N}\s-]/gu, '')
     .trim()
     .replace(/\s+/g, '-')
+}
+
+function toTimestamp(date: string): number {
+  if (!date) return Number.NEGATIVE_INFINITY
+  const value = Date.parse(date)
+  return Number.isNaN(value) ? Number.NEGATIVE_INFINITY : value
+}
+
+export function sortNotesForDisplay(notes: Note[]): Note[] {
+  return [...notes].sort((a, b) => {
+    const pinnedIndexA = PINNED_NOTE_SLUGS.indexOf(a.slug)
+    const pinnedIndexB = PINNED_NOTE_SLUGS.indexOf(b.slug)
+    const isPinnedA = pinnedIndexA !== -1
+    const isPinnedB = pinnedIndexB !== -1
+
+    if (isPinnedA || isPinnedB) {
+      if (isPinnedA && isPinnedB) return pinnedIndexA - pinnedIndexB
+      return isPinnedA ? -1 : 1
+    }
+
+    const timeDiff = toTimestamp(b.date) - toTimestamp(a.date)
+    if (timeDiff !== 0) return timeDiff
+
+    return a.title.localeCompare(b.title)
+  })
 }
 
 export function getAllNotes(): Note[] {

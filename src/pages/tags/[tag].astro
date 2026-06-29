@@ -1,10 +1,10 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro'
 import NoteCard from '../../components/NoteCard.astro'
-import { getAllNotes } from '../../lib/notes'
+import { getAllNotes, sortNotesForDisplay } from '../../lib/notes'
 
 export async function getStaticPaths() {
-  const notes = getAllNotes()
+  const notes = sortNotesForDisplay(getAllNotes())
   const tags = [...new Set(notes.flatMap((n) => n.tags))]
   return tags.map((tag) => ({
     params: { tag },
