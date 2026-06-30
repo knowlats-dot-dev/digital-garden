@@ -1,9 +1,9 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro'
 import NoteCard from '../components/NoteCard.astro'
-import { getAllNotes } from '../lib/notes'
+import { getAllNotes, sortNotesForDisplay } from '../lib/notes'
 
-const notes = getAllNotes().sort((a, b) => (b.date > a.date ? 1 : -1))
+const notes = sortNotesForDisplay(getAllNotes())
 
 function excerpt(content: string): string {
   const plain = content

@@ -4,7 +4,7 @@ import KnowledgeGraph from '../components/KnowledgeGraph'
 import { getAllNotes, buildGraphData } from '../lib/notes'
 
 const notes = getAllNotes()
-const { nodes, edges } = buildGraphData(notes)
+const data = buildGraphData(notes)
 ---
 
 <BaseLayout title="Knowledge Graph">
@@ -16,12 +16,12 @@ const { nodes, edges } = buildGraphData(notes)
         Knowledge Graph
       </h1>
       <p class="text-muted text-sm">
-        {nodes.length} notes · {edges.length} connections · click any node to open the note
+        {data.nodes.length} notes · {data.links.length} connections · click any node to open the note
       </p>
     </div>
 
     <div class="border-border min-h-125 flex-1 overflow-hidden rounded-xl border">
-      <KnowledgeGraph nodes={nodes} edges={edges} client:only="react" />
+      <KnowledgeGraph data={data} client:only="react" />
     </div>
   </div>
 </BaseLayout>

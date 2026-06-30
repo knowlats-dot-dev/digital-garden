@@ -23,15 +23,16 @@ This is an **Astro 6** static site with **React** and **Svelte 5** islands and *
 
 ### Content pipeline
 
-Notes are plain Markdown files in `content/notes/` with YAML frontmatter (`title`, `date`, `tags[]`). They are **not** Astro Content Collections — they are read at build time by `src/lib/notes.ts` using `gray-matter` directly from the filesystem.
+Notes are plain Markdown (`.md`/`.mdx`) files read at build time by `src/lib/notes.ts` with `gray-matter` directly from the filesystem — they are **not** Astro Content Collections. `getAllNotes()` walks the entire `content/` directory recursively (`NOTES_DIR = content`, an Obsidian vault), skipping dot-entries (e.g. `.obsidian`) and the `templates/` directory. Recognized frontmatter: `title` (falls back to the slug), `date` (falls back to `updated`, else empty), and `tags[]` (defaults to `[]`).
 
 `src/lib/notes.ts` is the single source of truth for all note data. It:
+
 - Parses frontmatter and extracts `[[wikilink]]` syntax (supporting `[[slug|alias]]`)
 - Computes bidirectional backlinks across all notes in a single pass
-- Builds React Flow graph data (`buildGraphData`)
+- Builds force-graph data: `buildGraphData` (global graph — all notes) and `buildLocalGraphData(notes, slug, depth=1)` (the note plus neighbors within `depth` hops). Both return `{ nodes, links }`; each node carries a `degree` (link count) used to size it. Layout positions are computed at runtime by the simulation, not precomputed.
 - Converts wikilinks to `<a>` or `<span class="wikilink-missing">` HTML (`wikilinkToHtml`)
 
-Slugs are derived from filenames (no `.md`). The `slugify` function lowercases and hyphenates — wikilink targets must match this form to resolve.
+Slugs are derived from each file's path **relative to `content/`**: the extension is dropped and the remaining path segments are joined with spaces, then passed through `slugify` (lowercase; strip punctuation; collapse whitespace to hyphens; Unicode-aware via `\p{L}`, so Thai is preserved). For example `content/course/intro.md` → `course-intro`. Wikilink targets are slugified the same way, so they must resolve to this form.
 
 ### Pages & routing
 
@@ -49,7 +50,7 @@ Tailwind v4 with a custom dark theme defined in `src/styles/global.css` via `@th
 
 ### KnowledgeGraph component
 
-`src/components/KnowledgeGraph.tsx` is a React island. It receives pre-computed `nodes` and `edges` from Astro (via `buildGraphData`), renders them with **React Flow**, and navigates to `/notes/[slug]` on node click. Tag-to-color mapping is hardcoded in `tagToColor`.
+`src/components/KnowledgeGraph.tsx` is a React island (`client:only="react"`) that renders an Obsidian-style force-directed graph with **`react-force-graph-2d`** (HTML canvas + d3-force). It takes a `data={{ nodes, links }}` prop and optional `activeSlug`. Nodes are circles sized by `degree`; labels are canvas-drawn and fade with zoom; hovering a node highlights it plus its neighbors and dims the rest; clicking navigates to `/notes/[slug]`. Live physics, dragging, zoom and pan come from the library. The canvas is sized to its container via a `ResizeObserver`, and dark/light colors follow the `.dark` class through a `MutationObserver`. `/graph` passes the global graph; each note's sidebar passes its local graph (`buildLocalGraphData`).
 
 ### Svelte 5 islands
 

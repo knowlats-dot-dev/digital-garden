@@ -1,88 +1,58 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import {
-  ReactFlow,
-  Background,
-  Controls,
-  MiniMap,
-  useNodesState,
-  useEdgesState,
-  type Node,
-  type NodeTypes,
-  Handle,
-  Position,
-  MarkerType,
-} from '@xyflow/react'
-import '@xyflow/react/dist/style.css'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import ForceGraph2D, {
+  type ForceGraphMethods,
+  type NodeObject,
+  type LinkObject,
+} from 'react-force-graph-2d'
 
-interface NoteNodeData {
+interface GraphNodeData {
+  id: string
   label: string
   slug: string
   tags: string[]
-  active?: boolean
+  degree: number
 }
 
-function NoteNode({ data }: { data: NoteNodeData }) {
-  const tagColor = data.tags[0] ? tagToColor(data.tags[0]) : '#ef4444'
-
-  return (
-    <div
-      className={[
-        'max-w-45 min-w-30 cursor-pointer rounded-[10px] border-[1.5px] px-3.5 py-2.5 transition-all duration-200',
-        data.active
-          ? 'border-accent-light bg-[color-mix(in_oklch,var(--color-accent)_20%,transparent)] shadow-[0_0_16px_color-mix(in_oklch,var(--color-accent)_40%,transparent)]'
-          : 'bg-surface border-border shadow-none',
-      ].join(' ')}
-    >
-      <Handle
-        type="target"
-        position={Position.Top}
-        style={{ background: tagColor, width: 8, height: 8 }}
-      />
-      <div className="text-muted mb-1 flex flex-wrap gap-1 text-[0.78rem]">
-        {data.tags.slice(0, 2).map((t) => (
-          <span key={t} className="bg-surface2 rounded-full px-1.5 py-px text-[0.7rem]">
-            #{t}
-          </span>
-        ))}
-      </div>
-      <div className="text-fg text-[0.85rem] leading-[1.3] font-semibold">{data.label}</div>
-      <Handle
-        type="source"
-        position={Position.Bottom}
-        style={{ background: tagColor, width: 8, height: 8 }}
-      />
-    </div>
-  )
+interface GraphLinkData {
+  source: string
+  target: string
 }
 
-function tagToColor(tag: string): string {
-  const colors: Record<string, string> = {
-    productivity: '#4ade80',
-    tools: '#fb923c',
-    meta: '#ef4444',
-    system: '#38bdf8',
-    obsidian: '#a78bfa',
-    workflow: '#f472b6',
-    'note-taking': '#34d399',
-  }
-  return colors[tag] ?? '#ef4444'
-}
-
-const nodeTypes: NodeTypes = { noteNode: NoteNode }
+type FGNode = NodeObject<GraphNodeData>
+type FGLink = LinkObject<GraphNodeData, GraphLinkData>
+type FGMethods = ForceGraphMethods<GraphNodeData, GraphLinkData>
 
 interface Props {
-  nodes: Array<{ id: string; data: NoteNodeData; position: { x: number; y: number } }>
-  edges: Array<{ id: string; source: string; target: string }>
+  data: { nodes: GraphNodeData[]; links: GraphLinkData[] }
   activeSlug?: string
 }
 
-export default function KnowledgeGraph({
-  nodes: initialNodes,
-  edges: initialEdges,
-  activeSlug,
-}: Props) {
-  const [isDark, setIsDark] = useState(() => document.documentElement.classList.contains('dark'))
+const FONT = 'Inter, ui-sans-serif, system-ui, sans-serif'
 
+// Node radius grows with its number of connections, like Obsidian.
+function radiusForDegree(degree: number): number {
+  return 3 + Math.sqrt(degree) * 1.6
+}
+
+// A link's endpoint is a string id before the simulation runs and a node
+// object afterwards; normalise to the id either way.
+function endpointId(end: FGLink['source']): string {
+  if (end && typeof end === 'object') return String((end as FGNode).id)
+  return String(end)
+}
+
+export default function KnowledgeGraph({ data, activeSlug }: Props) {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const fgRef = useRef<FGMethods | undefined>(undefined)
+  const didFitRef = useRef(false)
+
+  const [size, setSize] = useState({ width: 0, height: 0 })
+  const [hoverId, setHoverId] = useState<string | null>(null)
+  const [isDark, setIsDark] = useState(() =>
+    typeof document !== 'undefined' ? document.documentElement.classList.contains('dark') : true,
+  )
+
+  // Track theme so the canvas colors follow the dark/light toggle.
   useEffect(() => {
     const obs = new MutationObserver(() =>
       setIsDark(document.documentElement.classList.contains('dark')),
@@ -91,93 +61,205 @@ export default function KnowledgeGraph({
     return () => obs.disconnect()
   }, [])
 
+  // Size the canvas to its container (the sidebar can also dispatch `resize`).
+  useEffect(() => {
+    const el = containerRef.current
+    if (!el) return
+    const update = () => setSize({ width: el.clientWidth, height: el.clientHeight })
+    update()
+    const ro = new ResizeObserver(update)
+    ro.observe(el)
+    window.addEventListener('resize', update)
+    return () => {
+      ro.disconnect()
+      window.removeEventListener('resize', update)
+    }
+  }, [])
+
   const colors = useMemo(
     () =>
       isDark
         ? {
             bg: '#030712',
-            surface: '#111827',
-            surface2: '#1f2937',
-            border: '#374151',
-            accent: '#ef4444',
-            accentLight: '#f87171',
+            node: '#cbd5e1',
+            link: '#374151',
+            linkActive: '#f87171',
+            accent: '#f87171',
+            label: '#e5e7eb',
           }
         : {
             bg: '#f9fafb',
-            surface: '#ffffff',
-            surface2: '#f3f4f6',
-            border: '#e5e7eb',
+            node: '#64748b',
+            link: '#cbd5e1',
+            linkActive: '#dc2626',
             accent: '#dc2626',
-            accentLight: '#dc2626',
+            label: '#374151',
           },
     [isDark],
   )
 
-  const rfNodes = useMemo(
-    () =>
-      initialNodes.map((n) => ({
-        ...n,
-        type: 'noteNode' as const,
-        data: { ...n.data, active: n.id === activeSlug },
-      })),
-    [initialNodes, activeSlug],
+  // Undirected adjacency built from the original (string) link ids, used for
+  // hover highlighting. Built from `data` so it is unaffected by the mutation
+  // react-force-graph performs on the cloned graph below.
+  const adjacency = useMemo(() => {
+    const map = new Map<string, Set<string>>()
+    const link = (a: string, b: string) => {
+      if (!map.has(a)) map.set(a, new Set())
+      map.get(a)!.add(b)
+    }
+    for (const l of data.links) {
+      const s = String(l.source)
+      const t = String(l.target)
+      link(s, t)
+      link(t, s)
+    }
+    return map
+  }, [data])
+
+  // react-force-graph mutates node/link objects (adds x/y, resolves
+  // source/target to node refs), so hand it a private clone with a stable
+  // identity to avoid resetting the simulation on every re-render.
+  const graphData = useMemo(
+    () => ({
+      nodes: data.nodes.map((n) => ({ ...n })),
+      links: data.links.map((l) => ({ ...l })),
+    }),
+    [data],
   )
 
-  const rfEdges = useMemo(
-    () =>
-      initialEdges.map((e) => ({
-        ...e,
-        style: { stroke: colors.border, strokeWidth: 1.5 },
-        markerEnd: { type: MarkerType.ArrowClosed, color: colors.border, width: 12, height: 12 },
-        animated: false,
-      })),
-    [initialEdges, colors],
-  )
+  const ready = size.width > 0 && size.height > 0
 
-  const [nodes, , onNodesChange] = useNodesState(rfNodes)
-  const [edges, setEdges, onEdgesChange] = useEdgesState(rfEdges)
-
+  // Tune the forces for Obsidian-like spacing once the graph is mounted.
   useEffect(() => {
-    setEdges(rfEdges)
-  }, [rfEdges, setEdges])
+    const fg = fgRef.current
+    if (!fg || !ready) return
+    fg.d3Force('charge')?.strength(-110)
+    fg.d3Force('link')?.distance(30)
+    fg.d3ReheatSimulation()
+  }, [ready, graphData])
 
-  const onNodeClick = useCallback((_: React.MouseEvent, node: Node) => {
-    window.location.href = `/notes/${node.data.slug}`
+  const isNodeHot = useCallback(
+    (id: string) => !hoverId || id === hoverId || !!adjacency.get(hoverId)?.has(id),
+    [hoverId, adjacency],
+  )
+
+  const isLinkHot = useCallback(
+    (link: FGLink) =>
+      !!hoverId && (endpointId(link.source) === hoverId || endpointId(link.target) === hoverId),
+    [hoverId],
+  )
+
+  const nodeCanvasObject = useCallback(
+    (node: FGNode, ctx: CanvasRenderingContext2D, globalScale: number) => {
+      const x = node.x ?? 0
+      const y = node.y ?? 0
+      const id = String(node.id)
+      const isActive = node.slug === activeSlug
+      const hot = isNodeHot(id)
+      const r = radiusForDegree(node.degree ?? 0)
+
+      ctx.globalAlpha = hot ? 1 : 0.2
+      ctx.beginPath()
+      ctx.arc(x, y, r, 0, 2 * Math.PI)
+      ctx.fillStyle = isActive ? colors.accent : colors.node
+      ctx.fill()
+
+      // Labels are screen-constant size; fade out only when zoomed far out.
+      const zoomAlpha = Math.max(0, Math.min(1, (globalScale - 0.08) / 0.18))
+      const forceLabel = isActive || id === hoverId
+      if (zoomAlpha > 0.03 || forceLabel) {
+        const fontSize = 12 / globalScale
+        ctx.font = `${fontSize}px ${FONT}`
+        ctx.textAlign = 'center'
+        ctx.textBaseline = 'top'
+        ctx.globalAlpha = (hot ? 1 : 0.25) * (forceLabel ? 1 : zoomAlpha)
+        ctx.fillStyle = colors.label
+        ctx.fillText(node.label ?? id, x, y + r + 2 / globalScale)
+      }
+
+      ctx.globalAlpha = 1
+    },
+    [activeSlug, colors, hoverId, isNodeHot],
+  )
+
+  const nodePointerAreaPaint = useCallback(
+    (node: FGNode, color: string, ctx: CanvasRenderingContext2D) => {
+      const r = radiusForDegree(node.degree ?? 0) + 2
+      ctx.fillStyle = color
+      ctx.beginPath()
+      ctx.arc(node.x ?? 0, node.y ?? 0, r, 0, 2 * Math.PI)
+      ctx.fill()
+    },
+    [],
+  )
+
+  const linkColor = useCallback(
+    (link: FGLink) => (isLinkHot(link) ? colors.linkActive : colors.link),
+    [colors, isLinkHot],
+  )
+
+  const linkWidth = useCallback((link: FGLink) => (isLinkHot(link) ? 1.6 : 1), [isLinkHot])
+
+  const onNodeClick = useCallback((node: FGNode) => {
+    window.location.href = `/notes/${node.slug}`
+  }, [])
+
+  const onNodeHover = useCallback((node: FGNode | null) => {
+    setHoverId(node ? String(node.id) : null)
+    if (typeof document !== 'undefined') {
+      document.body.style.cursor = node ? 'pointer' : ''
+    }
   }, [])
 
   return (
-    <div className="graph-container bg-bg h-full w-full overflow-hidden rounded-xl">
-      <ReactFlow
-        nodes={nodes}
-        edges={edges}
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
-        onNodeClick={onNodeClick}
-        nodeTypes={nodeTypes}
-        fitView
-        fitViewOptions={{ padding: 0.3 }}
-        proOptions={{ hideAttribution: true }}
-        style={{ background: colors.bg }}
-      >
-        <Background color={colors.border} gap={20} size={1} />
-        <Controls
-          style={{
-            background: colors.surface,
-            border: `1px solid ${colors.border}`,
-            borderRadius: '8px',
+    <div ref={containerRef} className="graph-container h-full w-full overflow-hidden rounded-xl">
+      <nav className="sr-only" aria-label="Knowledge graph nodes">
+        <p>Use this list to open notes from the knowledge graph.</p>
+        <ul>
+          {data.nodes.map((node) => (
+            <li key={node.id}>
+              <button
+                type="button"
+                onClick={() => onNodeClick(node)}
+                aria-current={node.slug === activeSlug ? 'page' : undefined}
+              >
+                {node.label}
+              </button>
+            </li>
+          ))}
+        </ul>
+      </nav>
+      {ready && (
+        <ForceGraph2D<GraphNodeData, GraphLinkData>
+          ref={fgRef}
+          graphData={graphData}
+          width={size.width}
+          height={size.height}
+          backgroundColor={colors.bg}
+          nodeRelSize={4}
+          nodeCanvasObjectMode={() => 'replace'}
+          nodeCanvasObject={nodeCanvasObject}
+          nodePointerAreaPaint={nodePointerAreaPaint}
+          linkColor={linkColor}
+          linkWidth={linkWidth}
+          linkHoverPrecision={6}
+          onNodeClick={onNodeClick}
+          onNodeHover={onNodeHover}
+          cooldownTicks={120}
+          onEngineStop={() => {
+            if (didFitRef.current) return
+            const fg = fgRef.current
+            if (!fg) return
+            // Frame the connected cluster; orphan notes can drift to the edges.
+            if (graphData.links.length > 0) {
+              fg.zoomToFit(400, 60, (n) => ((n as FGNode).degree ?? 0) > 0)
+            } else {
+              fg.zoomToFit(400, 60)
+            }
+            didFitRef.current = true
           }}
-          showInteractive={false}
         />
-        <MiniMap
-          nodeColor={(n) => (n.data?.active ? colors.accentLight : colors.surface2)}
-          maskColor={isDark ? 'rgba(3,7,18,0.7)' : 'rgba(249,250,251,0.7)'}
-          style={{
-            background: colors.surface,
-            border: `1px solid ${colors.border}`,
-            borderRadius: '8px',
-          }}
-        />
-      </ReactFlow>
+      )}
     </div>
   )
 }
