@@ -1,6 +1,5 @@
 <script lang="ts">
   import { onMount } from 'svelte'
-  import { fade } from 'svelte/transition'
   import MoonIcon from '../icons/MoonIcon.svelte'
   import SunIcon from '../icons/SunIcon.svelte'
 
@@ -37,11 +36,11 @@
 >
   <span class="icon-wrapper">
     {#if theme === 'dark'}
-      <span in:fade={{ duration: 200 }} out:fade={{ duration: 200 }} class="icon">
+      <span class="icon">
         <MoonIcon />
       </span>
     {:else}
-      <span in:fade={{ duration: 200 }} out:fade={{ duration: 200 }} class="icon">
+      <span class="icon">
         <SunIcon />
       </span>
     {/if}
