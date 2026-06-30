@@ -1,4 +1,0 @@
-[submodule "digital-garden-content"]
-	path = content
-	url = https://github.com/knowlats-dot-dev/digital-garden-content.git
-	branch = master

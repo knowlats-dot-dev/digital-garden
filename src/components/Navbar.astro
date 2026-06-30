@@ -1,5 +1,4 @@
 ---
-import { mac } from 'astro:schema'
 import Search from '../components/Search.svelte'
 import ThemeToggle from '../components/ThemeToggle.svelte'
 
@@ -18,29 +17,69 @@ const NAV_LINKS = [
   },
   {
     path: 'https://knowlats.dev',
-    title: 'Blog'
-  }
+    title: 'Blog',
+    active: false,
+  },
 ]
 ---
 
 <nav
-  class="bg-bg/85 border-border sticky top-0 z-100 flex items-center justify-between border-b px-8 py-3 backdrop-blur-md"
+  class="bg-bg/85 border-border sticky top-0 z-100 border-b px-4 py-3 backdrop-blur-md md:px-8"
 >
-  <a href="/" class="text-fg text-[1.05rem] font-display no-underline hover:no-underline"
-    >🌱 Knowlats Digital Garden</a
-  >
-  <div class="flex items-center gap-6 text-sm">
-    <Search client:load />
-    {
-      NAV_LINKS.map((item) => (
-        <a
-          href={item.path}
-          class={`font-display decoration-2 transition-colors duration-150 hover:underline ${item.active ? 'underline decoration-dashed' : 'no-underline'}`}
+  <div class="mx-auto flex w-full max-w-350 flex-wrap items-center gap-3">
+    <a
+      href="/"
+      class="text-fg flex items-center gap-2 text-[1.05rem] font-display no-underline hover:no-underline"
+    >
+      <span>🌱</span>
+      <span class="flex flex-col">
+        <span>Little Garden</span>
+        <span class="text-xs text-muted">by Knowlats.dev</span>
+      </span>
+    </a>
+
+    <input
+      id="nav-menu-toggle"
+      type="checkbox"
+      class="peer sr-only"
+      aria-label="Toggle navigation menu"
+    />
+
+    <div
+      class="border-border order-3 hidden w-full flex-col gap-3 border-t pt-3 text-sm peer-checked:flex md:order-none md:ml-auto md:flex md:w-auto md:flex-row md:items-center md:gap-6 md:border-t-0 md:pt-0"
+    >
+      {
+        NAV_LINKS.map((item) => (
+          <a
+            href={item.path}
+            class={`w-fit font-display decoration-2 transition-colors duration-150 hover:underline ${item.active ? 'underline decoration-dashed' : 'no-underline'}`}
+          >
+            {item.title}
+          </a>
+        ))
+      }
+    </div>
+
+    <div class="ml-auto flex items-center gap-3 md:ml-3">
+      <Search client:load />
+      <ThemeToggle client:load />
+      <label
+        for="nav-menu-toggle"
+        class="border-border text-muted hover:text-fg inline-flex cursor-pointer items-center justify-center rounded-md border p-2 md:hidden"
+      >
+        <span class="sr-only">Menu</span>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          class="h-4 w-4"
+          aria-hidden="true"
         >
-          {item.title}
-        </a>
-      ))
-    }
-    <ThemeToggle client:load />
+          <path stroke-linecap="round" d="M4 7h16M4 12h16M4 17h16"></path>
+        </svg>
+      </label>
+    </div>
   </div>
 </nav>
