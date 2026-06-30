@@ -6,7 +6,7 @@ import { unified } from 'unified'
 import remarkParse from 'remark-parse'
 import remarkHtml from 'remark-html'
 
-const allNotes = getAllNotes()
+const allNotes = getAllNotes().filter((note) => note.slug === 'index')
 const notes = sortNotesForDisplay(allNotes)
 const indexNote = getNoteBySlug('index')
 const validSlugs = new Set(allNotes.map((note) => note.slug))
