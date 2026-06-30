@@ -2,9 +2,6 @@
 import BaseLayout from '../layouts/BaseLayout.astro'
 import KnowledgeGraph from '../components/KnowledgeGraph'
 import { getAllNotes, buildGraphData } from '../lib/notes'
-import BaseLayout from '../layouts/BaseLayout.astro'
-import KnowledgeGraph from '../components/KnowledgeGraph'
-import { getAllNotes, buildGraphData } from '../lib/notes'
 
 const notes = getAllNotes()
 const data = buildGraphData(notes)
@@ -12,11 +9,7 @@ const data = buildGraphData(notes)
 
 <BaseLayout title="Knowledge Graph">
   <div class="graph-title flex h-[calc(100vh-80px)] flex-col">
-  <div class="graph-title flex h-[calc(100vh-80px)] flex-col">
     <div class="mb-4">
-      <h1
-        class="from-fg to-accent-light mb-1 bg-linear-to-br bg-clip-text text-4xl font-bold text-transparent"
-      >
       <h1
         class="from-fg to-accent-light mb-1 bg-linear-to-br bg-clip-text text-4xl font-bold text-transparent"
       >
