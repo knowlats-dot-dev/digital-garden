@@ -154,7 +154,7 @@ function buildAdjacency(notes: Note[]): {
     for (const target of note.outlinks) {
       if (target === note.slug || !slugSet.has(target)) continue
       const [a, b] = [note.slug, target].sort()
-      const key = `${a}--${b}`
+      const key = JSON.stringify([a, b])
       if (seen.has(key)) continue
       seen.add(key)
       links.push({ source: a, target: b })
