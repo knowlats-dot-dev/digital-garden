@@ -23,26 +23,27 @@ This is an **Astro 6** static site with **React** and **Svelte 5** islands and *
 
 ### Content pipeline
 
-Notes are plain Markdown (`.md`/`.mdx`) files read at build time by `src/lib/notes.ts` with `gray-matter` directly from the filesystem — they are **not** Astro Content Collections. `getAllNotes()` walks the entire `content/` directory recursively (`NOTES_DIR = content`, an Obsidian vault), skipping dot-entries (e.g. `.obsidian`) and the `templates/` directory. Recognized frontmatter: `title` (falls back to the slug), `date` (falls back to `updated`, else empty), and `tags[]` (defaults to `[]`).
+Notes are plain Markdown (`.md`/`.mdx`) files read at build time by `src/lib/notes.ts` with `gray-matter` directly from the filesystem — they are **not** Astro Content Collections. `getAllNotes()` walks `content/notes` recursively (`NOTES_DIR = content/notes`), skipping dot-entries and the `templates/` directory. Recognized frontmatter: `title` (falls back to the slug), `date` (falls back to `updated`, else empty), and `tags[]` (defaults to `[]`).
 
-`src/lib/notes.ts` is the single source of truth for all note data. It:
+`src/lib/notes.ts` is the single source of truth for note data. It:
 
 - Parses frontmatter and extracts `[[wikilink]]` syntax (supporting `[[slug|alias]]`)
-- Computes bidirectional backlinks across all notes in a single pass
-- Builds force-graph data: `buildGraphData` (global graph — all notes) and `buildLocalGraphData(notes, slug, depth=1)` (the note plus neighbors within `depth` hops). Both return `{ nodes, links }`; each node carries a `degree` (link count) used to size it. Layout positions are computed at runtime by the simulation, not precomputed.
+- Computes `outlinks` and bidirectional backlinks
+- Builds force-graph data via `buildGraphData` (global) and `buildLocalGraphData(notes, slug, depth=1)` (local neighborhood); both return `{ nodes, links }` and each node includes `degree`
 - Converts wikilinks to `<a>` or `<span class="wikilink-missing">` HTML (`wikilinkToHtml`)
+- Sorts notes for display with `sortNotesForDisplay`: pinned notes first (`index`, `welcome`), then newest-first by date, then title
 
-Slugs are derived from each file's path **relative to `content/`**: the extension is dropped and the remaining path segments are joined with spaces, then passed through `slugify` (lowercase; strip punctuation; collapse whitespace to hyphens; Unicode-aware via `\p{L}`, so Thai is preserved). For example `content/course/intro.md` → `course-intro`. Wikilink targets are slugified the same way, so they must resolve to this form.
+Slugs are derived from each file's **basename** (not full nested path): `path.parse(relativePath).name` then `slugify` (lowercase; strip punctuation; collapse whitespace to hyphens; Unicode-aware via `\p{L}`, so Thai is preserved). Wikilink targets are slugified with the same function.
 
 ### Pages & routing
 
-| Route           | File                           | Notes                                                    |
-| --------------- | ------------------------------ | -------------------------------------------------------- |
-| `/`             | `src/pages/index.astro`        | Lists all notes sorted by date, tag filter bar           |
-| `/notes/[slug]` | `src/pages/notes/[slug].astro` | Individual note with rendered markdown, backlinks, graph |
-| `/tags/[tag]`   | `src/pages/tags/[tag].astro`   | Notes filtered by tag                                    |
-| `/graph`        | `src/pages/graph.astro`        | Full-screen knowledge graph                              |
-| `/search.json`  | `src/pages/search.json.ts`     | Build-time JSON corpus for client-side search            |
+| Route           | File                           | Notes                                                                          |
+| --------------- | ------------------------------ | ------------------------------------------------------------------------------ |
+| `/`             | `src/pages/index.astro`        | Lists notes with pinned-first, date-desc, then title ordering; tag filter bar  |
+| `/notes/[slug]` | `src/pages/notes/[slug].astro` | Individual note with rendered markdown, backlinks, graph                       |
+| `/tags/[tag]`   | `src/pages/tags/[tag].astro`   | Notes filtered by tag                                                          |
+| `/graph`        | `src/pages/graph.astro`        | Full-screen knowledge graph                                                    |
+| `/search.json`  | `src/pages/search.json.ts`     | Build-time JSON corpus for client-side search                                  |
 
 ### Styling
 
