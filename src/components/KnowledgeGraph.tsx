@@ -262,4 +262,5 @@ export default function KnowledgeGraph({ data, activeSlug }: Props) {
       )}
     </div>
   )
+  )
 }
