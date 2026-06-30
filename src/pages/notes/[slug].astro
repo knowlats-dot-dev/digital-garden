@@ -22,7 +22,7 @@ const data = buildLocalGraphData(allNotes, slug!)
 const contentWithLinks = wikilinkToHtml(note.content, validSlugs)
 const result = await unified()
   .use(remarkParse)
-  .use(remarkHtml, { sanitize: false })
+  .use(remarkHtml, { sanitize: true })
   .process(contentWithLinks)
 const html = String(result)
 
