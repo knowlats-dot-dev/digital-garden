@@ -8,7 +8,6 @@ tags:
 ---
 Part of [[sql|SQL]]
 
-
 **Subqueries** คือ Query ซ้อน Query
 
 ใช้ทำอะไร?
@@ -34,7 +33,6 @@ WHERE salary > (
 SELECT AVG(salary) FROM employees  
 );
 ```
-
 
 > ใช้เป็น derived table
 

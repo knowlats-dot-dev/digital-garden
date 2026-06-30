@@ -12,7 +12,6 @@ https://github.com/BorntoDev/SQL-Cheat-Sheet
 Playground:
 [SQLiteOnline](https://sqliteonline.com/)
 
-
 - [[sql-select|SELECT from SQL]]
 - [[sql-join|SQL JOIN]]
 - [[sql-set-operation|Set Operation in SQL]]

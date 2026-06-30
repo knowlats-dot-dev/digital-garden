@@ -97,7 +97,6 @@ FROM invoices;
 
 แทนที่จะเขียน OR ต่อกัน เขียน IN สั้นกว่า
 
-
 ```
 SELECT * FROM customers
 WHERE country = 'Bazill' OR country = 'Germany' OR country = 'Norway';

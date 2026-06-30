@@ -164,7 +164,7 @@ for(int e : arr){
 
 ## การสร้าง Project ด้วย Spring Initializr
 
-![](images/java-spring-initializr-home.png)
+![](/images/java-spring-initializr-home.png)
 
 ### Project
 
@@ -184,7 +184,7 @@ for(int e : arr){
     
     กลุ่มที่แอปพลิเคชันจะอยู่ ส่วนมากเป็นโดเมนเนมที่เริ่มต้นด้วย extension ตามด้วยชื่อและซับโดเมน
     
-    ![](images/java-spring-project-metadata-group.png)
+    ![](/images/java-spring-project-metadata-group.png)
     
     ตามตัวอย่าง หากเราจะใช้ Group นี้ เราควรพิมพ์ว่า `com.magicworkshost` (ไม่ต้องมี www)
     
@@ -215,7 +215,7 @@ for(int e : arr){
 - **`mvnw` / `mvnw.cmd`** — ไฟล์ของ Spring Boot เป็นตัวรันแอปพลิเคชัน
 - **`pom.xml`** — ไฟล์สำคัญของโปรเจคที่ใช้ Maven เก็บข้อมูลทั่วไปของ App เช่น Artifact, Name, Description รวมถึง Dependency (ถ้าเลือกเป็น Gradle จะเป็นไฟล์อีกแบบ)
 
-![](images/java-spring-project-structure.png)
+![](/images/java-spring-project-structure.png)
 
 ## Structure for REST API
 
@@ -623,7 +623,7 @@ public class ClassOne {
 
 # Component ของ Spring
 
-![](images/java-spring-spring-components.png)
+![](/images/java-spring-spring-components.png)
 
 Spring มีกลไกช่วยสแกนหาคลาสต่าง ๆ ที่เป็นถูก Mark เป็น Component และเรียกใช้อัตโนมัติ โดยที่เราไม่ต้องเขียนโค้ดเพื่อ Import สร้าง Object ใช้เอง
 
@@ -711,7 +711,7 @@ spring.jpa.hibernate.ddl-auto=update
 
 เมื่อรัน Application จะเห็นว่ามีการเชื่อมต่อกับ Database ตามข้อมูลที่เรากรอก
 
-![](images/java-spring-db-connection-log.png)
+![](/images/java-spring-db-connection-log.png)
 
 ## สร้าง Database Entity
 
@@ -845,7 +845,7 @@ public interface NewsRepository extends CrudRepository<News, UUID> {}
 
 หลังการสร้าง จะมีฟังก์ชันให้ใช้ดังนี้
 
-![](images/java-spring-crud-repository-methods.png)
+![](/images/java-spring-crud-repository-methods.png)
 
 จากรูปจะเห็นว่า มันประกอบด้วยฟังก์ชันที่ทำคำสั่ง Query ไม่ซับซ้อน หากเราต้องการฟังก์ชันที่มีการ Query ที่ซับซ้อนมากกว่านั้น เราต้องกำหนดภายใน Repository ที่เราสร้างขึ้นเอง โดยกำหนดเป็นหัวฟังก์ชันเท่านั้น (ไม่ต้องกำหนดการทำงานภายใน) การกำหนดชื่อฟังก์ชันจะมีข้อกำหนดอยู่ อย่างเช่น
 

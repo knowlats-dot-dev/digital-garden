@@ -13,7 +13,6 @@ Resources
 - https://www.shadertoy.com/
 - https://thebookofshaders.com/
 
-
 Related:
 
 [[Event: Intro to Creative Coding with Patchies Workshop]]

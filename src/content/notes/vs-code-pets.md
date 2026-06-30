@@ -9,7 +9,7 @@ tags:
 ---
 https://tonybaloney.github.io/vscode-pets/
 
-![](images/vs-code-pets-image.png)
+![](/images/vs-code-pets-image.png)
 
 My Pet List
 

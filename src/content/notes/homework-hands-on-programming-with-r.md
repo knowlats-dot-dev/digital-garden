@@ -1,6 +1,6 @@
 ---
 title: "[Not Finished] Homework: Hands-On Programming with R"
-updated: 2026-07-01T02:57:23+07:00
+updated: 2026-07-01T03:16:40+07:00
 tags:
   - data-science
   - course
@@ -12,4 +12,4 @@ Part of [[course-data-science-bootcamp-12]]
 
 อ่านที่ https://rstudio-education.github.io/hopr/
 
-![](images/homework-hands-on-programming-with-r-image.png)
+![](/images/homework-hands-on-programming-with-r-image.png)
