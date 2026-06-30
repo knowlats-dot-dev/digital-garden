@@ -32,7 +32,7 @@ export interface GraphData {
   links: GraphLink[]
 }
 
-const NOTES_DIR = path.join(process.cwd(), 'content')
+const NOTES_DIR = path.join(process.cwd(), 'content/notes')
 const PINNED_NOTE_SLUGS = ['index', 'welcome']
 
 function collectMarkdownFiles(dir: string): string[] {
