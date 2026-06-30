@@ -107,7 +107,7 @@ export function getAllNotes(): Note[] {
 
     return {
       slug,
-      title: data.title ?? slug,
+      title: data.title ? String(data.title).trim() : slug,
       date: data.date ? String(data.date) : data.updated ? String(data.updated) : '',
       tags: Array.isArray(data.tags) ? data.tags : [],
       content,
