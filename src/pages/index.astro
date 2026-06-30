@@ -1,9 +1,17 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro'
 import NoteCard from '../components/NoteCard.astro'
-import { getAllNotes, sortNotesForDisplay } from '../lib/notes'
+import { getAllNotes, getNoteBySlug, sortNotesForDisplay, wikilinkToHtml } from '../lib/notes'
+import { unified } from 'unified'
+import remarkParse from 'remark-parse'
+import remarkHtml from 'remark-html'
 
-const notes = sortNotesForDisplay(getAllNotes())
+const allNotes = getAllNotes()
+const notes = sortNotesForDisplay(allNotes)
+const indexNote = getNoteBySlug('index')
+const validSlugs = new Set(allNotes.map((note) => note.slug))
+const allTags = [...new Set(notes.flatMap((note) => note.tags))].sort()
+const notesBatchSize = 10
 
 function excerpt(content: string): string {
   const plain = content
@@ -14,41 +22,109 @@ function excerpt(content: string): string {
   return plain.slice(0, 160).replace(/\n+/g, ' ') + (plain.length > 160 ? '…' : '')
 }
 
-const allTags = [...new Set(notes.flatMap((n) => n.tags))].sort()
+const contentWithLinks = indexNote ? wikilinkToHtml(indexNote.content, validSlugs) : ''
+const html = indexNote
+  ? String(
+      await unified().use(remarkParse).use(remarkHtml, { sanitize: false }).process(contentWithLinks),
+    )
+  : ''
 ---
 
-<BaseLayout title="Notes">
-  <div class="mb-6">
-    <h1 class="text-fg mb-1 text-2xl font-semibold">All Notes</h1>
-    <p class="text-muted text-sm">{notes.length} notes · a living, growing knowledge base</p>
-  </div>
+<BaseLayout title={indexNote?.title ?? 'Top Page'}>
+  <div class="mx-auto max-w-3xl">
+    <header class=" mb-8 pb-6">
+      <h1
+        class="from-fg to-accent-light mb-2 bg-linear-to-br bg-clip-text text-4xl leading-tight font-bold text-transparent"
+      >
+        Welcome to Little Garden
+      </h1>
+      <p class="text-gray-600">by Knowlats.dev</p>
+    </header>
 
-  {
-    allTags.length > 0 && (
-      <div class="mb-8 flex flex-wrap gap-2">
-        {allTags.map((tag) => (
-          <a
-            href={`/tags/${tag}`}
-            class="bg-surface2 border-border text-muted hover:border-accent hover:text-accent-light inline-block rounded-full border px-2 py-0.5 text-xs no-underline transition-all duration-150 hover:no-underline"
-          >
-            #{tag}
-          </a>
-        ))}
-      </div>
-    )
-  }
-
-  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
     {
-      notes.map((note) => (
-        <NoteCard
-          slug={note.slug}
-          title={note.title}
-          date={note.date}
-          tags={note.tags}
-          excerpt={excerpt(note.content)}
-        />
-      ))
+      indexNote && (
+        <article class="prose" set:html={html} />
+      )
     }
+
+    <section class="mt-12">
+      <div class="mb-6">
+        <h2 class="text-fg mb-1 text-2xl font-semibold">All Notes</h2>
+        <p class="text-muted text-sm">{notes.length} notes · a living, growing knowledge base</p>
+      </div>
+
+      {
+        allTags.length > 0 && (
+          <div class="mb-8 flex flex-wrap gap-2">
+            {allTags.map((tag) => (
+              <a
+                href={`/tags/${tag}`}
+                class="bg-surface2 border-border text-muted hover:border-accent hover:text-accent-light inline-block rounded-full border px-2 py-0.5 text-xs no-underline transition-all duration-150 hover:no-underline"
+              >
+                #{tag}
+              </a>
+            ))}
+          </div>
+        )
+      }
+
+      <div id="note-list" class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        {
+          notes.map((note, index) => (
+            <div class="h-full" data-note-index={index}>
+              <NoteCard
+                slug={note.slug}
+                title={note.title}
+                date={note.date}
+                tags={note.tags}
+                excerpt={excerpt(note.content)}
+              />
+            </div>
+          ))
+        }
+      </div>
+      <div id="note-list-sentinel" class="text-muted mt-6 text-center text-sm">
+        Loading more notes...
+      </div>
+    </section>
   </div>
+
+  <script is:inline define:vars={{ notesBatchSize }}>
+    const list = document.getElementById('note-list')
+    const sentinel = document.getElementById('note-list-sentinel')
+
+    if (list && sentinel) {
+      const items = Array.from(list.querySelectorAll('[data-note-index]'))
+      let visibleCount = Math.min(notesBatchSize, items.length)
+
+      function applyVisibility() {
+        items.forEach((item, index) => {
+          item.hidden = index >= visibleCount
+        })
+      }
+
+      function updateSentinelText() {
+        sentinel.textContent = visibleCount >= items.length ? 'All notes loaded' : 'Loading more notes...'
+      }
+
+      applyVisibility()
+      updateSentinelText()
+
+      if (visibleCount < items.length) {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (!entry.isIntersecting) continue
+              visibleCount = Math.min(visibleCount + notesBatchSize, items.length)
+              applyVisibility()
+              updateSentinelText()
+              if (visibleCount >= items.length) observer.disconnect()
+            }
+          },
+          { rootMargin: '240px 0px' },
+        )
+        observer.observe(sentinel)
+      }
+    }
+  </script>
 </BaseLayout>
