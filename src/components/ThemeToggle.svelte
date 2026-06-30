@@ -5,6 +5,8 @@
   import SunIcon from '../icons/SunIcon.svelte'
 
   type Theme = 'dark' | 'light'
+  const iconFade = fade
+  const iconFadeParams = { duration: 200 }
 
   function getPreferredTheme(): Theme {
     const stored = localStorage.getItem('theme')
@@ -37,11 +39,11 @@
 >
   <span class="icon-wrapper">
     {#if theme === 'dark'}
-      <span in:fade={{ duration: 200 }} out:fade={{ duration: 200 }} class="icon">
+      <span in:iconFade={iconFadeParams} out:iconFade={iconFadeParams} class="icon">
         <MoonIcon />
       </span>
     {:else}
-      <span in:fade={{ duration: 200 }} out:fade={{ duration: 200 }} class="icon">
+      <span in:iconFade={iconFadeParams} out:iconFade={iconFadeParams} class="icon">
         <SunIcon />
       </span>
     {/if}
