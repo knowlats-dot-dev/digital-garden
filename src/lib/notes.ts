@@ -32,7 +32,7 @@ export interface GraphData {
   links: GraphLink[]
 }
 
-const NOTES_DIR = path.join(process.cwd(), 'content/notes')
+const NOTES_DIR = path.join(process.cwd(), 'src/content/notes')
 const PINNED_NOTE_SLUGS = ['index', 'welcome']
 
 function collectMarkdownFiles(dir: string): string[] {
@@ -208,14 +208,14 @@ export function buildLocalGraphData(notes: Note[], slug: string, depth = 1): Gra
   return { nodes, links: localLinks }
 }
 
-// Convert wikilinks to HTML anchor tags for display
+// Convert wikilinks to markdown links for safe rendering with sanitization
 export function wikilinkToHtml(content: string, validSlugs: Set<string>): string {
   return content.replace(/\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g, (_, link, alias) => {
     const slug = slugify(link.trim())
     const label = alias?.trim() ?? link.trim()
     if (validSlugs.has(slug)) {
-      return `<a href="/notes/${slug}" class="wikilink">${label}</a>`
+      return `[${label}](/notes/${slug})`
     }
-    return `<span class="wikilink-missing">${label}</span>`
+    return label
   })
 }
