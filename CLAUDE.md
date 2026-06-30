@@ -37,13 +37,13 @@ Slugs are derived from each file's **basename** (not full nested path): `path.pa
 
 ### Pages & routing
 
-| Route           | File                           | Notes                                                    |
-| --------------- | ------------------------------ | -------------------------------------------------------- |
-| `/`             | `src/pages/index.astro`        | Lists all notes sorted by date, tag filter bar           |
-| `/notes/[slug]` | `src/pages/notes/[slug].astro` | Individual note with rendered markdown, backlinks, graph |
-| `/tags/[tag]`   | `src/pages/tags/[tag].astro`   | Notes filtered by tag                                    |
-| `/graph`        | `src/pages/graph.astro`        | Full-screen knowledge graph                              |
-| `/search.json`  | `src/pages/search.json.ts`     | Build-time JSON corpus for client-side search            |
+| Route           | File                           | Notes                                                                          |
+| --------------- | ------------------------------ | ------------------------------------------------------------------------------ |
+| `/`             | `src/pages/index.astro`        | Lists notes with pinned-first, date-desc, then title ordering; tag filter bar  |
+| `/notes/[slug]` | `src/pages/notes/[slug].astro` | Individual note with rendered markdown, backlinks, graph                       |
+| `/tags/[tag]`   | `src/pages/tags/[tag].astro`   | Notes filtered by tag                                                          |
+| `/graph`        | `src/pages/graph.astro`        | Full-screen knowledge graph                                                    |
+| `/search.json`  | `src/pages/search.json.ts`     | Build-time JSON corpus for client-side search                                  |
 
 ### Styling
 
