@@ -100,10 +100,7 @@ export function getAllNotes(): Note[] {
 
   const notes: Note[] = files.map((filePath) => {
     const relativePath = path.relative(NOTES_DIR, filePath)
-    const slugSource = relativePath
-      .replace(/\.(md|mdx)$/i, '')
-      .split(path.sep)
-      .join(' ')
+    const slugSource = path.parse(relativePath).name
     const slug = slugify(slugSource)
     const raw = fs.readFileSync(filePath, 'utf-8')
     const { data, content } = matter(raw)
