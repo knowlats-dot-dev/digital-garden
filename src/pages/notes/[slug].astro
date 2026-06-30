@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro'
 import KnowledgeGraph from '../../components/KnowledgeGraph'
-import { getAllNotes, getNoteBySlug, buildGraphData, wikilinkToHtml } from '../../lib/notes'
+import { getAllNotes, getNoteBySlug, buildLocalGraphData, wikilinkToHtml } from '../../lib/notes'
 import { unified } from 'unified'
 import remarkParse from 'remark-parse'
 import remarkHtml from 'remark-html'
@@ -17,7 +17,7 @@ if (!note) return Astro.redirect('/')
 
 const allNotes = getAllNotes()
 const validSlugs = new Set(allNotes.map((n) => n.slug))
-const { nodes, edges } = buildGraphData(allNotes)
+const data = buildLocalGraphData(allNotes, slug!)
 
 const contentWithLinks = wikilinkToHtml(note.content, validSlugs)
 const result = await unified()
@@ -117,7 +117,7 @@ const outlinkNotes = allNotes.filter((n) => note.outlinks.includes(n.slug))
         <a href="/graph" class="text-accent-light text-[0.78rem]">Full view →</a>
       </div>
       <div class="h-100 max-lg:h-[calc(100%-3rem)]">
-        <KnowledgeGraph nodes={nodes} edges={edges} activeSlug={slug} client:only="react" />
+        <KnowledgeGraph data={data} activeSlug={slug} client:only="react" />
       </div>
     </aside>
 
