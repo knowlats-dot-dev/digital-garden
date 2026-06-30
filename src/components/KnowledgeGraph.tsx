@@ -213,6 +213,22 @@ export default function KnowledgeGraph({ data, activeSlug }: Props) {
 
   return (
     <div ref={containerRef} className="graph-container h-full w-full overflow-hidden rounded-xl">
+      <nav className="sr-only" aria-label="Knowledge graph nodes">
+        <p>Use this list to open notes from the knowledge graph.</p>
+        <ul>
+          {data.nodes.map((node) => (
+            <li key={node.id}>
+              <button
+                type="button"
+                onClick={() => onNodeClick(node)}
+                aria-current={node.slug === activeSlug ? 'page' : undefined}
+              >
+                {node.label}
+              </button>
+            </li>
+          ))}
+        </ul>
+      </nav>
       {ready && (
         <ForceGraph2D<GraphNodeData, GraphLinkData>
           ref={fgRef}
