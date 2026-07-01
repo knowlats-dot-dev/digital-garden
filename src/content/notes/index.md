@@ -1,17 +1,14 @@
 ---
 title: Top Page
-updated: 2026-06-30T21:44:12+07:00
+updated: 2026-07-01T03:45:22+07:00
 tags:
 ---
 
-## Categories
+## Main Topics
 
 - [[books|Books]]
 - [[event|Events]]
 - [[course|Courses]]
-
-## Main Topics
-
 - [[programming|Programming]]
 - [[tools|Tools]]
 - [[ai|AI]]

@@ -15,5 +15,4 @@ Initialize [[storybook|Storybook]] with a command:
  pnpm create storybook@latest
 ```
 
-
 After finishing setup & config, install `vitest` and

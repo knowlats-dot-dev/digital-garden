@@ -72,7 +72,7 @@ Positive Skew = กราฟเบ้ขวา
 
 ส่วน Mode จะใช้หาจำนวนข้อมูลที่เกิดซ้ำมากสุด
 
-![](images/basic-statistic-central-tendency.png)
+![](/images/basic-statistic-central-tendency.png)
 
 ## Variability = การกระจายตัวของข้อมูล
 
@@ -86,11 +86,11 @@ SD = square Root of Variance
 
 ถ้าเป็นกราฟ จะเป็นค่าแกน x
 
-![](images/basic-statistic-variability.png)
+![](/images/basic-statistic-variability.png)
 
 ## Boxplot ดูการกระจายตัวของข้อมูล
 
-![](images/basic-statistic-boxplot.png)
+![](/images/basic-statistic-boxplot.png)
 (From: https://uoftcompdsci.github.io/ggr274-20251/weekly-materials/week05/lecture/Class5_GGR274_MM.html?utm_source=chatgpt.com)
 
 องค์ประกอบ
@@ -126,7 +126,7 @@ z < 0 → น้อยกว่าค่าเฉลี่ย
 
 ## Empirical Rule
 
-![](images/basic-statistic-empirical-rule.png)ถ้าข้อมูลเป็นโค้งปกติ (Normal distribution):
+![](/images/basic-statistic-empirical-rule.png)ถ้าข้อมูลเป็นโค้งปกติ (Normal distribution):
 
 - **68.2%** ของข้อมูล อยู่ในช่วง  
     ค่าเฉลี่ย ± 1 ส่วนเบี่ยงเบนมาตรฐาน (μ ± 1σ)

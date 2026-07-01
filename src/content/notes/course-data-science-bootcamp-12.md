@@ -30,7 +30,6 @@ Using Softwares:
 - Jetbrains DataLore
 - Github
 
-
 List of short note:
 
 - [[recommend-books-for-data-science|Recommend Books]]
@@ -44,7 +43,6 @@ List of short note:
 - [[data-transformation|Data Transformation with R]]
 - [[data-visualization]]
 - [[basic-statistic|basic-statistic]]
-
 
 Homework:
 

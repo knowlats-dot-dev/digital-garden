@@ -38,16 +38,14 @@ KBTG Techtopia เป็น [[event|Events]] ประเภท Tech conference 
 
 มีบูทให้ละเลงสีบนผืนผ้าใบยักษ์ด้วยนะ เราได้มีช่วยลงสีพื้นหลังนิดนึง ปลุกไฟหัวใจศิลป์ซะหน่อย
 
+![](/images/event-kbtg-techtopia-image-3.jpg)
 
-![](images/event-kbtg-techtopia-image-3.jpg)
+![](/images/event-kbtg-techtopia-image-2.jpg)
 
-![](images/event-kbtg-techtopia-image-2.jpg)
+![](/images/event-kbtg-techtopia-image-4.jpg)
 
-![](images/event-kbtg-techtopia-image-4.jpg)
+![](/images/event-kbtg-techtopia-image-5.jpg)
 
-![](images/event-kbtg-techtopia-image-5.jpg)
-
-![](images/event-kbtg-techtopia-image.jpg)
-
+![](/images/event-kbtg-techtopia-image.jpg)
 
 รวม Quote ที่มาจากงานนี้ https://www.facebook.com/KBTGLive/posts/pfbid02XEtXHZhxfntBrijtc2uNGFLZyQynwd3hM2mFWet93hvEUHT9yrvS8THPrAEG3apwl

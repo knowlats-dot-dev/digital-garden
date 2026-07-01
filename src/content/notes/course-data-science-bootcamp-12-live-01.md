@@ -47,7 +47,6 @@ Planning - Refinement - Review
 เทคนิคการเรียนรู้โดย Barbara Oakley
 https://datarockie.com/blog/learning-how-to-learn-barbara-oakley/
 
-
 # Intro to Data Science
 
 Learn Data Science as **Skills**, not Position
@@ -87,7 +86,6 @@ Data Engineer  - ไปทาง Software, Cloud, / Java Scala. DevOps, DataOps,
 4. Momentum - ทำอย่างต่อเนื่อง
 5. 
 จาก Limitless - Jim Kwix
-
 
 # Data Science Process
 
@@ -198,7 +196,6 @@ Cambridge Analytica เป็นตัวอย่างที่บอกว่
 - บิดเบือนข้อมูล
 - manipulate สังคม
 
-
 https://en.wikipedia.org/wiki/Project_Alamo
 
 https://en.wikipedia.org/wiki/Customer_data_platform
@@ -267,11 +264,10 @@ https://en.wikipedia.org/wiki/Moneyball_(film)
 
 https://drewconway.com/zia/2013/3/26/the-data-science-venn-diagram
 
-![](images/course-data-science-bootcamp-12-live-01-data-science-venn-diagram.png)
+![](/images/course-data-science-bootcamp-12-live-01-data-science-venn-diagram.png)
 
 	ถ้าอยากจะเป็น Data Science ต้องไม่หยุดเรียนรู้
 
-
 ## บริษัทไม่ได้ต้องการ Data  เขาต้องการ Insight
 
-![](images/course-data-science-bootcamp-12-live-01-data-insight.png)
+![](/images/course-data-science-bootcamp-12-live-01-data-insight.png)

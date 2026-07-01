@@ -115,7 +115,6 @@ SELECT * from a, b
 
 หรือ
 
-
 ```
 SELECT * from a CROSS JOIN b
 ```
@@ -125,7 +124,6 @@ SELECT * from a CROSS JOIN b
 ใช้เชื่อมข้อมูลของตัวเอง แสดงถึงความสัมพันธ์กันเอง เช่น Employee กับ Manager
 
 ทำได้ด้วย การใช้ WHERE
-
 
 ```
 SELECT

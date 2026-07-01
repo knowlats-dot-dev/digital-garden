@@ -18,19 +18,17 @@ Installed Plugins:
 - Style Settings - CSS plugin to deco Obsidian, Use together with Supercharged Links. Github: https://github.com/mgmeyers/obsidian-style-settings
 - [[supercharged-links|Obsidian Plugin: Supercharged Links]] - Add style to blacklinks. Github: https://github.com/mdelobelle/obsidian_supercharged_links
 
-
 My Settings:
 
 **Frontmatter Title**
 
-![](images/my-obsidian-setup-image.png)
+![](/images/my-obsidian-setup-image.png)
 
 Enable All Features
 
 **Obsidian Plugin: Supercharged Links**
 
-![](images/my-obsidian-setup-image-2.png)
-
+![](/images/my-obsidian-setup-image-2.png)
 
 And paste file `links.css` in `.obsidian/snippets`
 
@@ -61,7 +59,6 @@ Adapted code from: https://forum.obsidian.md/t/internal-links-that-display-note-
 
 ```
 
-
 **Frontmatter Modified Date**
 
-![](images/my-obsidian-setup-image-3.png)
+![](/images/my-obsidian-setup-image-3.png)
