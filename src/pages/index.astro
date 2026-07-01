@@ -4,6 +4,7 @@ import NoteCard from '../components/NoteCard.astro'
 import { getAllNotes, getNoteBySlug, sortNotesForDisplay, wikilinkToHtml } from '../lib/notes'
 import { unified } from 'unified'
 import remarkParse from 'remark-parse'
+import remarkGfm from 'remark-gfm'
 import remarkHtml from 'remark-html'
 
 const allNotes = getAllNotes().filter((note) => note.slug !== 'index')
@@ -25,7 +26,11 @@ function excerpt(content: string): string {
 const contentWithLinks = indexNote ? wikilinkToHtml(indexNote.content, validSlugs) : ''
 const html = indexNote
   ? String(
-      await unified().use(remarkParse).use(remarkHtml, { sanitize: false }).process(contentWithLinks),
+      await unified()
+        .use(remarkParse)
+        .use(remarkGfm)
+        .use(remarkHtml, { sanitize: true })
+        .process(contentWithLinks),
     )
   : ''
 ---

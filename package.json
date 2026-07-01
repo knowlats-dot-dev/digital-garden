@@ -24,6 +24,7 @@
     "react-dom": "^19.2.7",
     "react-force-graph-2d": "^1.29.1",
     "remark": "^15.0.1",
+    "remark-gfm": "^4.0.1",
     "remark-html": "^16.0.1",
     "remark-parse": "^11.0.0",
     "svelte": "^5.56.4",

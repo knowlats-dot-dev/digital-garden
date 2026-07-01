@@ -4,6 +4,7 @@ import KnowledgeGraph from '../../components/KnowledgeGraph'
 import { getAllNotes, getNoteBySlug, buildLocalGraphData, wikilinkToHtml } from '../../lib/notes'
 import { unified } from 'unified'
 import remarkParse from 'remark-parse'
+import remarkGfm from 'remark-gfm'
 import remarkHtml from 'remark-html'
 
 export async function getStaticPaths() {
@@ -22,6 +23,7 @@ const data = buildLocalGraphData(allNotes, slug!)
 const contentWithLinks = wikilinkToHtml(note.content, validSlugs)
 const result = await unified()
   .use(remarkParse)
+  .use(remarkGfm)
   .use(remarkHtml, { sanitize: true })
   .process(contentWithLinks)
 const html = String(result)
