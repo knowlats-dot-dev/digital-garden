@@ -22,7 +22,7 @@ function excerpt(content: string): string {
 
 const contentWithLinks = indexNote ? wikilinkToHtml(indexNote.content, validSlugs) : ''
 const html = indexNote
-  ? renderMarkdownToHtml(contentWithLinks)
+  ? await renderMarkdownToHtml(contentWithLinks)
   : ''
 ---
 
