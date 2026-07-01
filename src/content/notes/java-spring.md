@@ -1,12 +1,11 @@
 ---
 title: "[Java] Spring"
-updated: 2026-06-30T21:17:31+07:00
+updated: 2026-07-01T03:45:04+07:00
 tags:
   - framework
   - java
 ---
-
-# [Java] Spring
+*Latest Noted 3 July 2021*
 
 # ความรู้ Java แบบเร็ว ๆ
 

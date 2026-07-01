@@ -1,13 +1,13 @@
 ---
 title: Kafka
-updated: 2026-06-30T21:06:52+07:00
+updated: 2026-07-01T03:41:47+07:00
 tags:
   - event-driven
   - system-design
   - tools
 ---
 
-*จดบันทึกวันที่ 3 November 2021*
+*Latest Noted 3 November 2021*
 
 # Apache Kafka คืออะไร?
 

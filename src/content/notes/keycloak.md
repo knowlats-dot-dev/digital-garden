@@ -1,9 +1,10 @@
 ---
 title: Keycloak
-updated: 2026-06-30T21:11:23+07:00
+updated: 2026-07-01T03:43:55+07:00
 tags:
   - tools
 ---
+*Latest Noted 25 May 2021*
 
 # Keycloak คืออะไร?
 
